@@ -1,0 +1,11 @@
+Vorschlag zu ordinaten.
+
+Diskretisiere die ordinaten der sonnensysteme, sprich den subraum der galaxie.
+Erzeuge die Sonnensysteme somit auf ganzzahligen x,y,z werten.
+
+Erzeuge einen diskreten subraum(sonnensystemgrid) im Sonnensystem.
+Erzeuge einen stetigen subraum im sonnensystemgrid.
+
+Mit dieser abwandlung ist deine random-mapgeneration in der lage die direkte spielwelt darzustellen. Die Sonnensysteme im stetigen r3 zu halten ist zwar sicherlich für den spezialfall der map schön, aber sichtbare unterschiede sollten diskrete werte nicht geben und wir können sie direkt weiterwerwenden.
+
+Letztlich ist es auch möglich nahtlos von a nach b zu fliegen da stetige räume aus prinzip ḱeine ungenauigkeit haben und direkt aneinander liegen.
