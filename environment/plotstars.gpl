@@ -1,0 +1,9 @@
+set title "Random Galaxy Positions with colonization level"
+set parametric
+set hidden3d
+set isosamples 18
+set autoscale
+set view 60,20
+set loadpath "/home/dev/.gnuplotting"
+load 'yapps.plt'
+splot "test.txt" with points palette

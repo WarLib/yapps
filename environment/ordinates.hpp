@@ -17,6 +17,8 @@ public:
 
 	bool operator<(const Ordinate& vgl) const;
 	Ordinate operator-(const Ordinate& vgl) const;
+        void operator*=(double val);
+        Ordinate operator*(double val) const;
 };
 
 #endif
