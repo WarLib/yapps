@@ -12,6 +12,7 @@
 #include <map>
 #include <sstream>
 #include <iostream>
+#include <fstream>
 
 #define yappsMouse 1
 #define yappsKeyboard 2
@@ -64,11 +65,15 @@ private:
         Callbacks = new yappsListener*[32];
 
         /* Move this area to a configfile */
+        loadConfig();/*
         setKeyBind("w", "forward");
         setKeyBind("s", "backward");
-        setKeyBind("a", "left");
+        setKeyBind("a", "left");*/
         setKeyBind("d", "right");
+        saveConfig(); // OFC THIS IS DEBUGGING ONLY
     }
+    void loadConfig();
+    void saveConfig();
 
 
 protected:
