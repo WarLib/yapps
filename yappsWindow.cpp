@@ -35,7 +35,7 @@ yappsWindow::yappsWindow(void)
 {
     yInputManager = yappsInput::getInstance();
 
-    yappsControllableObject* TESTOBJEKT = new yappsControllableObject();
+    yappsControllableObject* TESTOBJEKT = new yappsSpacerock();
 
     yInputManager->subscribe(TESTOBJEKT);
 }
@@ -442,7 +442,7 @@ void yappsWindow::createScene(void){
 		name << "System" << i;
 		System& thisSystem(*(MySystems[i]));
 
-		//Ogre::SceneNode* particleNode = mSceneMgr->getRootSceneNode()->createChildSceneNode(name.str(),Ogre::Vector3(thisSystem.GetCenter().GetOrdinates(X),thisSystem.GetCenter().GetOrdinates(Y),thisSystem.GetCenter().GetOrdinates(Z)));
+		//Ogre::SceneNode* particleNode = mSceneMgr->getRootSceneNode()->crSieateChildSceneNode(name.str(),Ogre::Vector3(thisSystem.GetCenter().GetOrdinates(X),thisSystem.GetCenter().GetOrdinates(Y),thisSystem.GetCenter().GetOrdinates(Z)));
 		Ogre::Entity* System = mSceneMgr->createEntity( name.str(), "sphere.mesh" );
 		name << "node" ;
 		Ogre::SceneNode* SystemNode = mSceneMgr->getRootSceneNode()->createChildSceneNode( name.str(), Ogre::Vector3(thisSystem.GetCenter().GetOrdinates(X),thisSystem.GetCenter().GetOrdinates(Y),thisSystem.GetCenter().GetOrdinates(Z)));
