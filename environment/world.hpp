@@ -3,9 +3,14 @@
 
 #include "ordinates.hpp"
 #include "pred_random.hpp"
+#include "system_\star.hpp"
+#include "system_\Asteroid.hpp"
+#include "system_\planet.hpp"
 
 
 using namespace std;
+
+class Galaxy;
 
 class System {
 private:
@@ -13,10 +18,15 @@ private:
 
 
 	int _n_connections;
+	int _n_objects;
+
+	StellarObject** _objects;
 	System** _connected_systems;
+
+	Galaxy* _parent;
 public:
 	double _colonization;
-	System(Ordinate center);
+	System(Ordinate center, Galaxy* parent);
 	~System();
 	Ordinate& GetCenter(void);
 
@@ -24,12 +34,13 @@ public:
 	void Init(void);
 
 	void ConnectTo(int n_systems, System** systems);
+	StellarObject** GetObjects(int& n);
 };
 
 class Galaxy {
 private:
 	static Galaxy* _instance;
-	Random& rand_gen;
+	
 
 	System** _systems;
 	int _n_systems;
@@ -46,6 +57,7 @@ private:
 	void colonize();
 	void MakeSystems();
 public:
+	Random& rand_gen;
 	static Galaxy& GetGalaxy(const int& n_systems, double min_colonization = 10.5, const string& seed = "magicalrootseed", bool seeded = false);
 	System** GetSystems(int& n);
 	~Galaxy();

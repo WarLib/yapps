@@ -7,9 +7,9 @@ Player::Player(String name, SceneManager *sceneMgr) {
     mSceneMgr = sceneMgr;
 
     // Setup basic node structure to handle 3rd person cameras
-    mMainNode = mSceneMgr->getRootSceneNode()->createChildSceneNode(mName);
-    mSightNode = mMainNode->createChildSceneNode(mName + "_sight", Vector3(0, 0, 1000));
-    mCameraNode = mMainNode->createChildSceneNode(mName + "_camera", Vector3(0, 50, -200));
+    mMainNode = mSceneMgr->getRootSceneNode()->createChildSceneNode(mName,Vector3(0,0,-1000));
+    mSightNode = mMainNode->createChildSceneNode(mName + "_sight", Vector3(0, 0, 0));
+    mCameraNode = mMainNode->createChildSceneNode(mName + "_camera", Vector3(0, 50, -1200));
 
     // Give this character a shape :)
     mEntity = mSceneMgr->createEntity(mName, "fighter.mesh");
