@@ -3,9 +3,9 @@
 
 #include "ordinates.hpp"
 #include "pred_random.hpp"
-#include "system_\star.hpp"
-#include "system_\Asteroid.hpp"
-#include "system_\planet.hpp"
+#include "star.hpp"
+#include "Asteroid.hpp"
+#include "planet.hpp"
 
 
 using namespace std;
