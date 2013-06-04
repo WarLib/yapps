@@ -1,6 +1,5 @@
 #include "world.hpp"
 #include <set>
-#include <fstream>
 #include <cstdlib>
 #include <vector>
 #include <algorithm>
@@ -39,13 +38,6 @@ Galaxy::Galaxy(const int& n_systems, double min_colonization, const string& seed
     //generate n random, unique points and spread them with rising distance around the center
     MakeSystems();
     colonize();
-    fstream MyFile("test.txt", ios::out);
-
-
-    for (int i = 0; i < _n_systems; i++) {
-        MyFile << _systems[i]->GetCenter().GetOrdinates(X) << " " << _systems[i]->GetCenter().GetOrdinates(Y) << " " << _systems[i]->GetCenter().GetOrdinates(Z) << " " << _systems[i]->_colonization << endl;
-    }
-    MyFile.close();
 }
 
 Galaxy::~Galaxy() {
@@ -101,7 +93,9 @@ void Galaxy::colonize(void) {
             _systems[idx]->SetColonization(result);
         }
     }
+#ifndef NODEBUG    
     cout << "colonized systems: " << _n_colonized_systems << endl;
+#endif
 }
 
 System** Galaxy::GetSystems(int& n) {

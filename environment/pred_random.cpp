@@ -27,7 +27,7 @@ Random::Random() {
 
 string Random::MakeSeed() {
     stringstream seed;
-    ulong tmp;
+    unlong tmp;
     srand(time(0));
     tmp = rand();
     seed << tmp;
@@ -43,11 +43,11 @@ int Random::NextSign(void) {
     return tmp2;
 }
 
-ulong Random::GetMax(void) {
+unlong Random::GetMax(void) {
     return _max;
 }
 
-void Random::SetMax(ulong max) {
+void Random::SetMax(unlong max) {
     _max = max;
 }
 
@@ -97,27 +97,27 @@ double Random::uniform() {
     return output / (pow(2, (double)BYTES * 8) - 1);
 };
 
-ulong Random::random(ulong n, ulong m) {
+unlong Random::random(unlong n, unlong m) {
     if (m == 0 && n == 0) {
         n = _min;
         m = _max;
     }
-    return n + (ulong) (uniform() * (m - n));
+    return n + (unlong) (uniform() * (m - n));
 };
 
 double Random::normal(void) {
     double x = uniform(); // can't be exactly 0
     double y = uniform();
-    return sqrt((double)-2 * log(x)) * cos((double)2 * PI * (double)y);
+    return sqrt((double)-2 * log(x)) * cos((double)2 * MYPI * (double)y);
 };
 
 double Random::exponential(void) {
     return -log(uniform());
 };
 
-ulong Random::poisson(double mean) {
+unlong Random::poisson(double mean) {
     double L = exp(-(mean));
-    ulong k = 0;
+    unlong k = 0;
     double p = 1;
     do {
         k++;

@@ -3,11 +3,11 @@
 
 #include <string>
 
-typedef unsigned long ulong;
+typedef unsigned long unlong;
 
 using namespace std;
 
-#define PI 3.14159265359
+#define MYPI 3.14159265359
 
 
 //predictable random generator
@@ -17,11 +17,11 @@ private:
     static Random _instance;
     unsigned char* _s;
     int _i, _j;
-    ulong _min,_max;
+    unlong _min,_max;
 
     Random();
     Random(const Random&);
-    ulong _seed;
+    unlong _seed;
 
     void swap(int i, int j);
     void mix(const string& seed);
@@ -36,20 +36,20 @@ public:
     };
 
     void init(const string& seed);
-    //void init(ulong seed);
+    //void init(unlong seed);
 
     string MakeSeed();
 
-    ulong next(void);
+    unlong next(void);
     int NextSign(void);
-    ulong GetMax(void);
-    void SetMax(ulong max);
+    unlong GetMax(void);
+    void SetMax(unlong max);
 
     double uniform(void);
-    ulong random(ulong n = 0, ulong m = 0);
+    unlong random(unlong n = 0, unlong m = 0);
     double normal(void);
     double exponential(void);
-    ulong poisson(double mean);
+    unlong poisson(double mean);
     double gamma(double a);
 };
 
