@@ -34,7 +34,10 @@ yappsWindow::yappsWindow(void)
     mKeyboard(0)
 {
     yInputManager = yappsInput::getInstance();
-    yInputManager->subscribe(this);
+
+    yappsControllableObject* TESTOBJEKT = new yappsControllableObject();
+
+    yInputManager->subscribe(TESTOBJEKT);
 }
 
 //-------------------------------------------------------------------------------------

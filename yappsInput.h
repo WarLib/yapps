@@ -1,3 +1,8 @@
+#ifndef __yappsInput_h_
+#define __yappsInput_h_
+
+
+
 #include <OISEvents.h>
 #include <OISInputManager.h>
 #include <OISKeyboard.h>
@@ -13,8 +18,10 @@
 
 class yappsListener{
 public:
+    virtual void dispatch(std::string msg){};
+
     virtual void notify(std::string msg){
-    std::cout << msg << std::endl;
+    dispatch(msg);
     };
 };
 
@@ -55,7 +62,12 @@ private:
     yappsInput() {
         CallbacksLen = 0;
         Callbacks = new yappsListener*[32];
-        setKeyBind("w", "test");
+
+        /* Move this area to a configfile */
+        setKeyBind("w", "forward");
+        setKeyBind("s", "backward");
+        setKeyBind("a", "left");
+        setKeyBind("d", "right");
     }
 
 
@@ -64,3 +76,6 @@ protected:
 
 };
 
+
+
+#endif
