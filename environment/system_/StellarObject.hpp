@@ -2,6 +2,7 @@
 #define _STELLAROBJECT_HPP
 
 #include <OgreVector3.h>
+#include <OgreString.h>
 
 class StellarObject {
 protected:
@@ -11,6 +12,9 @@ protected:
 
 	double _mass;
 	double _density;
+        Ogre::String mConfigFile;
+        
+        void ReadCfg(const Ogre::String& type, double& den, double& mass);
 public:
 	StellarObject(Ogre::Vector3 center, Ogre::Vector3 rot, double colonization);
 	virtual void Update() = 0;

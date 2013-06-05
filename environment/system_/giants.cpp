@@ -1,9 +1,15 @@
-#include "planet.hpp"
+#include "giants.hpp"
 #include "pred_random.hpp"
 
-const Ogre::String ThisType = "planets";
+#ifdef TESTING_ENV
+#include <iostream>
 
-Planet::Planet(Ogre::Vector3 center, Ogre::Vector3 rot) : StellarObject(center, rot, 0) {
+using namespace std;
+#endif
+
+const Ogre::String ThisType = "giants";
+
+Giant::Giant(Ogre::Vector3 center, Ogre::Vector3 rot) : StellarObject(center, rot, 0) {
     double den, mass;
     Random & RANDGEN(Random::Instance());
     ReadCfg(ThisType, den, mass);
@@ -27,5 +33,5 @@ Planet::Planet(Ogre::Vector3 center, Ogre::Vector3 rot) : StellarObject(center, 
     _mass = rand*mass;
 }
 
-void Planet::Update() {
+void Giant::Update() {
 }

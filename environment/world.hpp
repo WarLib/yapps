@@ -6,7 +6,7 @@
 #include "star.hpp"
 #include "Asteroid.hpp"
 #include "planet.hpp"
-
+#include "giants.hpp"
 
 using namespace std;
 

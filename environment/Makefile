@@ -3,15 +3,15 @@
 
 # Compiler Settings
 CC=g++
-CFLAGS=-Wall -g -I$(OGRE_LOC) -I$(OIS_LOC)
+CFLAGS=-Wall -g -I$(OGRE_LOC) -I$(OIS_LOC) -D TESTING_ENV -I./
 LDFLAGS= -lOgreMain -lOIS
 FOLDERS=$(shell  find . -type d -path './[!.]*')
 INCLUDE_FOLDERS=$(addprefix -I,$(patsubst %,%/,$(FOLDERS)))
-SOURCES=$(shell  find . -name '*.cpp' -not -name '*testing*')
+SOURCES=$(shell  find . -name '*.cpp')
 #SOURCES=$(wildcard *.cpp) $(wildcard */*.cpp)
 OBJECTS=$(SOURCES:.cpp=.o)
 
-P_YAPPS=yapps
+P_YAPPS=environment_testing
 
 #rules
 all: $(P_YAPPS)

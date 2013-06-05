@@ -4,7 +4,9 @@
 #include <cmath>
 #include <sstream>
 
+#ifdef TESTING_ENV
 #include <iostream>
+#endif
 
 using namespace std;
 
@@ -52,7 +54,9 @@ void Random::SetMax(unlong max) {
 }
 
 void Random::init(const string& seed) {
+#ifdef TESTING_ENV
     cout << "initializing generator with a seed" << endl;
+#endif
     _s = new unsigned char[256];
     _i = 0;
     _j = 0;
