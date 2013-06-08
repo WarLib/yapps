@@ -3,8 +3,8 @@
 
 # Compiler Settings
 CC=g++
-CFLAGS= `pkg-config --cflags --libs OGRE OIS`
-LDFLAGS= -lOgreMain -lOIS
+CFLAGS= `pkg-config --cflags OGRE OIS`
+LDFLAGS= `pkg-config  --libs OGRE OIS`
 FOLDERS=$(shell  find . -type d -path './[!.]*')
 INCLUDE_FOLDERS=$(addprefix -I,$(patsubst %,%/,$(FOLDERS)))
 SOURCES=$(shell  find . -name '*.cpp' -not -name '*testing*')
