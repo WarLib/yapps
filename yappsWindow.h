@@ -19,7 +19,7 @@
 #include <SdkCameraMan.h>
 
 #include "environment/world.hpp"
-#include "entity/yappsObjectCollector.h"
+#include "entity/yappsObject.h"
 #include "yappsInput.h"
 #include "yappsControllableObject.h"
 #include <sstream>

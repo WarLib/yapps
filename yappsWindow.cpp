@@ -35,7 +35,7 @@ mMouse(0),
 mKeyboard(0) {
     yInputManager = yappsInput::getInstance();
 
-    yappsControllableObject* TESTOBJEKT = new yappsSpacerock();
+    yappsControllableObject* TESTOBJEKT = new yappsObject();
 
     yInputManager->subscribe(TESTOBJEKT);
 }
@@ -422,7 +422,7 @@ void yappsWindow::createScene(void) {
         SystemNode->attachObject(System);
 
         SystemNode->scale(0.001, 0.001, 0.001);
-    }*/    
+    }*/
     StellarObject** MyObjects = MySystems[0]->GetObjects(n);
 
     for (int i = 0; i < n; i++) {
