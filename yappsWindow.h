@@ -20,8 +20,8 @@
 
 #include "environment/world.hpp"
 #include "entity/yappsObject.h"
-#include "yappsInput.h"
-#include "yappsControllableObject.h"
+#include "input/yappsInput.h"
+#include "entity/yappsControllableObject.h"
 #include <sstream>
 #include <string>
 #include <iostream>

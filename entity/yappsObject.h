@@ -23,8 +23,9 @@
 
 
 #include <string>
+#include <map>
 
-#include "../yappsControllableObject.h"
+#include "yappsControllableObject.h"
 
 class yappsObject: public yappsControllableObject{
 public:

@@ -2,6 +2,7 @@
 #include "yappsObject.h"
 
 
+
 yappsObject::yappsObject(Ogre::SceneManager* mSceneMgr, std::string name, std::string type){
         this->mSceneMgr = mSceneMgr;
         std::string endungMesh = ".mesh";
