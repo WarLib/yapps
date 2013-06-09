@@ -1,10 +1,16 @@
-#ifndef __yappsInput_h_
-#define __yappsInput_h_
+#ifndef __yappsObject_h_
+#define __yappsObject_h_
 
 
 
 class yappsObject{
 public:
+//Position - Objects tend to have that
+
+//Physical Appearance
+
+//Functions
+
 
 
 private:
