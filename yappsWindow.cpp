@@ -15,6 +15,7 @@ This source file is part of the
 -----------------------------------------------------------------------------
  */
 #include "yappsWindow.h"
+#include <OgreParticleSystem.h>
 
 //-------------------------------------------------------------------------------------
 
@@ -410,19 +411,19 @@ void yappsWindow::createScene(void) {
 
     Galaxy & MyGalaxy(Galaxy::GetGalaxy(n, 8, seed, true));
     System** MySystems = MyGalaxy.GetSystems(n);
-/*for (int i = 0; i < n; i++) {
-        stringstream name;
-        name << "System" << i;
-        System & thisSystem(*(MySystems[i]));
+    /*for (int i = 0; i < n; i++) {
+            stringstream name;
+            name << "System" << i;
+            System & thisSystem(*(MySystems[i]));
 
-        //Ogre::SceneNode* particleNode = mSceneMgr->getRootSceneNode()->crSieateChildSceneNode(name.str(),Ogre::Vector3(thisSystem.GetCenter().GetOrdinates(X),thisSystem.GetCenter().GetOrdinates(Y),thisSystem.GetCenter().GetOrdinates(Z)));
-        Ogre::Entity* System = mSceneMgr->createEntity(name.str(), "sphere.mesh");
-        name << "node";
-        Ogre::SceneNode* SystemNode = mSceneMgr->getRootSceneNode()->createChildSceneNode(name.str(), Ogre::Vector3(thisSystem.GetCenter().GetOrdinates(X), thisSystem.GetCenter().GetOrdinates(Y), thisSystem.GetCenter().GetOrdinates(Z)));
-        SystemNode->attachObject(System);
+            //Ogre::SceneNode* particleNode = mSceneMgr->getRootSceneNode()->crSieateChildSceneNode(name.str(),Ogre::Vector3(thisSystem.GetCenter().GetOrdinates(X),thisSystem.GetCenter().GetOrdinates(Y),thisSystem.GetCenter().GetOrdinates(Z)));
+            Ogre::Entity* System = mSceneMgr->createEntity(name.str(), "sphere.mesh");
+            name << "node";
+            Ogre::SceneNode* SystemNode = mSceneMgr->getRootSceneNode()->createChildSceneNode(name.str(), Ogre::Vector3(thisSystem.GetCenter().GetOrdinates(X), thisSystem.GetCenter().GetOrdinates(Y), thisSystem.GetCenter().GetOrdinates(Z)));
+            SystemNode->attachObject(System);
 
-        SystemNode->scale(0.001, 0.001, 0.001);
-    }*/    
+            SystemNode->scale(0.001, 0.001, 0.001);
+        }*/
     StellarObject** MyObjects = MySystems[0]->GetObjects(n);
 
     for (int i = 0; i < n; i++) {
@@ -436,7 +437,14 @@ void yappsWindow::createScene(void) {
         Ogre::SceneNode* SystemNode = mSceneMgr->getRootSceneNode()->createChildSceneNode(name.str(), Ogre::Vector3(thisObject.GetCenter()*500));
         SystemNode->attachObject(System);
 
+        if (i == 0) {
+            Ogre::ParticleSystem* sunParticle = mSceneMgr->createParticleSystem("Sun", "Space/Sun");
+            Ogre::SceneNode* particleNode = SystemNode->createChildSceneNode("Particle");
+            particleNode->attachObject(sunParticle);
+        }
+
         SystemNode->scale(thisObject.GetRadius()*0.5, thisObject.GetRadius()*0.5, thisObject.GetRadius()*0.5);
+
     }
 
 

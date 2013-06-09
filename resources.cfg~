@@ -7,3 +7,5 @@ FileSystem=/usr/share/OGRE-1.7.4/media/textures
 FileSystem=/usr/share/OGRE-1.7.4/media/models
 FileSystem=/usr/share/OGRE-1.7.4/media/materials/programs/
 FileSystem=/usr/share/OGRE-1.7.4/media/packs/SdkTrays/
+FileSystem=./ressources/materials/
+FileSystem=./ressources/textures/
