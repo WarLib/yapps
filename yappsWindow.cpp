@@ -35,9 +35,7 @@ mMouse(0),
 mKeyboard(0) {
     yInputManager = yappsInput::getInstance();
 
-    yappsControllableObject* TESTOBJEKT = new yappsObject();
 
-    yInputManager->subscribe(TESTOBJEKT);
 }
 
 //-------------------------------------------------------------------------------------
@@ -407,6 +405,9 @@ void yappsWindow::createScene(void) {
     string seed = "magicrootseed";
     mSceneMgr->setAmbientLight(Ogre::ColourValue(0.5f, 0.5f, 0.5f));
     mSceneMgr->setSkyBox(true, "MySky");
+
+    yappsControllableObject* TESTOBJEKT = new yappsObject(mSceneMgr, "Something", "sphere");
+    yInputManager->subscribe(TESTOBJEKT);
 
     Galaxy & MyGalaxy(Galaxy::GetGalaxy(n, 8, seed, true));
     System** MySystems = MyGalaxy.GetSystems(n);
