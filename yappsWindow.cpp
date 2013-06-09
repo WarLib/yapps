@@ -437,7 +437,7 @@ void yappsWindow::createScene(void) {
         Ogre::SceneNode* SystemNode = mSceneMgr->getRootSceneNode()->createChildSceneNode(name.str(), Ogre::Vector3(thisObject.GetCenter()*500));
         SystemNode->attachObject(System);
 
-        SystemNode->scale(thisObject.GetRadius()*0.05, thisObject.GetRadius()*0.05, thisObject.GetRadius()*0.05);
+        SystemNode->scale(thisObject.GetRadius()*0.01, thisObject.GetRadius()*0.01, thisObject.GetRadius()*0.01);
     }
 
 

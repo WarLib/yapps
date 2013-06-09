@@ -11,7 +11,8 @@ yappsObject::yappsObject(Ogre::SceneManager* mSceneMgr, std::string name, std::s
         mMainNode = mSceneMgr->getRootSceneNode()->createChildSceneNode(name, Ogre::Vector3(0,0,0)); //+Position!
         mMainNode->attachObject(mEntity);
 
-        mMainNode->scale(1,1,1);
+        mMainNode->scale(0.1,0.1,0.1);
+        tempPos[0]=0;tempPos[1]=0;tempPos[2]=0;
 
 }
 
@@ -26,4 +27,11 @@ Ogre::SceneNode *yappsObject::getCameraNode() {
 
 Ogre::Vector3 yappsObject::getWorldPosition() {
     return mMainNode->_getDerivedPosition();
+}
+
+
+void yappsObject::callback(){
+//Do stuff here you have to do on any frame
+
+
 }

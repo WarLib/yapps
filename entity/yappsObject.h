@@ -24,8 +24,12 @@
 
 #include <string>
 #include <map>
+#include <list>
 
+class yappsObject;
 #include "yappsControllableObject.h"
+#include "yappsFunktor.h"
+
 
 class yappsObject: public yappsControllableObject{
 public:
@@ -35,6 +39,10 @@ public:
     Ogre::Entity *mEntity; // Character entity
     Ogre::SceneManager *mSceneMgr; // Point of insertion
 
+    std::list<yappsFunktor> abilities;
+    double tempPos[3];
+
+    void callback();
 
     yappsObject(Ogre::SceneManager* mSceneMgr, std::string name, std::string type);
 
