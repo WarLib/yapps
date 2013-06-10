@@ -28,9 +28,11 @@
 
 namespace Yapps {
 class Object;
-}
-#include "ControllableObject.h"
+};
+
 #include "Funktor.h"
+#include "ControllableObject.h"
+
 #include "../environment/world.hpp"
 
 namespace Yapps {
@@ -42,7 +44,7 @@ class Object: public ControllableObject {
         Ogre::Entity *mEntity; // Character entity
         Ogre::SceneManager *mSceneMgr; // Point of insertion
 
-        std::list<Yapps::Funktor> abilities;
+        std::list<Yapps::Funktor*> abilities;
 
         Yapps::Vec3 bla;
 
@@ -55,6 +57,7 @@ class Object: public ControllableObject {
         Ogre::SceneNode *getSightNode();
         Ogre::SceneNode *getCameraNode();
         Ogre::Vector3 getWorldPosition();
+
     private:
 
 

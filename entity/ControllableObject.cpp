@@ -5,30 +5,10 @@ using namespace Yapps;
 
 void ControllableObject::dispatch(std::string msg)
 {
-    std::cout << "working on command!"<< std::endl;
-
-    //map? switch? both look horrible and so does if. But mass-if does the job really
-
-    if (msg == "forward")
-    {
-        accelerate();
-
+    try{
+   if (bindings[msg])bindings[msg]->call();
     }
-    else if (msg == "backward")
-    {
-        decelerate();
-
-    }
-    else if (msg == "left")
-    {
-        turnLeft();
-
-    }
-    else if (msg == "right")
-    {
-        turnRight();
-
-    };
-
-
+    catch(...){std::cout << "nope"<< std::endl;}
 };
+
+//bool ControllableObject::bind(std::string msg, (void* ) callback){};

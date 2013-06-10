@@ -14,6 +14,10 @@ Object::Object(Ogre::SceneManager* mSceneMgr, std::string name, std::string type
         mMainNode->scale(0.1,0.1,0.1);
         tempPos[0]=0;tempPos[1]=0;tempPos[2]=0;
 
+        Funktor* forward = new mv_forward();
+        abilities.push_back(forward);
+        bind("forward",forward);
+
 }
 
 

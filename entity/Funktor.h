@@ -1,22 +1,41 @@
 #ifndef __yappsFunktor_h_
 #define __yappsFunktor_h_
-namespace Yapps {
-class Funktor;
-};
+#include <iostream>
+
+//declared in controllableObject
 #include "Object.h"
 
 namespace Yapps {
-class Funktor{
+class Funktor {
+    public:
+        Object* parent;
 
-    Yapps::Object* parent;
 
-public:
-    Funktor(Yapps::Object* parent){this->parent = parent;}
-    void staticMovement();
+        Funktor() {
+
+            };
+        void staticMovement();
+        virtual void call() {
+            staticMovement();
+            };
+
+
+    };
+
+
+
+
+class mv_forward: public Funktor {
+    public:
+        mv_forward() {
+
+            };
+        void call() {
+            std::cout<<"BLAAAAH"<< std::endl;
+            };
+
+    };
 
 
 };
-
-};
-
 #endif
