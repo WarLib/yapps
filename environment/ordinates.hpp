@@ -5,8 +5,14 @@
 
 typedef long int lint;
 
-#define METER 1e-10lf;
+#define METER 1e-3f;
+#define GRID_UNIT 1e+30f;
+
 namespace Yapps {
+
+    typedef struct {
+        lint x, y, z;
+    } grid_vec;
 
     enum ord {
         X, Y, Z
@@ -14,14 +20,32 @@ namespace Yapps {
 
     class Vec3 : public Ogre::Vector3 {
     protected:
-        long int _g_x, _g_y, _g_z;
+        grid_vec _global;
     public:
         Vec3();
         Vec3(const lint gX, const lint gY, const lint gZ, const Ogre::Real fX, const Ogre::Real fY, const Ogre::Real fZ);
         Vec3(const lint agCoordinate[3], const Ogre::Real afCoordinate[3]);
         Vec3(const lint agCoordinate[3], const int afCoordinate[3]);
+        Vec3(grid_vec global, const Ogre::Real fX, const Ogre::Real fY, const Ogre::Real fZ);
         Vec3(lint * const g, Ogre::Real * const r);
         Vec3(const lint gscaler, const Ogre::Real scaler);
+
+        void operator +=(const Vec3 & vgl);
+        Vec3 operator +(const Vec3 & vgl) const;
+        void operator -=(const Vec3 & vgl);
+        Vec3 operator -(const Vec3 & vgl) const;
+
+        void operator +=(const grid_vec & vgl);
+        Vec3 operator +(const grid_vec & vgl) const;
+        void operator -=(const grid_vec & vgl);
+        Vec3 operator -(const grid_vec & vgl) const;
+
+        Vec3 & operator =(const Vec3& vgl);
+
+        bool operator ==(const Vec3& vgl) const;
+        bool operator !=(const Vec3& vgl) const;
+        
+        void getAdjectant(grid_vec vector[26]);
     };
 };
 

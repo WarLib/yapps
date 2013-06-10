@@ -486,6 +486,13 @@ extern "C" {
 
     int main(int argc, char *argv[]) {
         // Create application object
+        /*Yapps::Vec3 MyVec(0,0,0,1,1,1);
+                Yapps::grid_vec adjectant[26];
+                MyVec.getAdjectant(adjectant);
+                for (int idx = 0; idx < 26; idx++) {
+                    cout << "x:\t" << adjectant[idx].x << "\ty:\t" << adjectant[idx].y << "\tz:\t" << adjectant[idx].z << endl;
+                }
+         */
         yappsWindow app;
         try {
             app.go();

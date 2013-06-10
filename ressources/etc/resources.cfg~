@@ -10,4 +10,4 @@ FileSystem=/usr/share/OGRE-1.7.4/media/packs/SdkTrays/
 FileSystem=./ressources/materials/
 FileSystem=./ressources/textures/
 FileSystem=./ressources/particles/
-FileSystem=./ressources/meshes/
+FileSystem=./ressources/particles/meshes/
