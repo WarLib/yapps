@@ -5,8 +5,6 @@
 
 typedef long int lint;
 
-using namespace Ogre;
-
 #define METER 1e-10lf;
 namespace Yapps {
 
@@ -14,16 +12,16 @@ namespace Yapps {
         X, Y, Z
     };
 
-    class Vec3 : public Vector3 {
+    class Vec3 : public Ogre::Vector3 {
     protected:
         long int _g_x, _g_y, _g_z;
     public:
         Vec3();
-        Vec3(const lint gX, const lint gY, const lint gZ, const Real fX, const Real fY, const Real fZ);
-        Vec3(const lint agCoordinate[3], const Real afCoordinate[3]);
+        Vec3(const lint gX, const lint gY, const lint gZ, const Ogre::Real fX, const Ogre::Real fY, const Ogre::Real fZ);
+        Vec3(const lint agCoordinate[3], const Ogre::Real afCoordinate[3]);
         Vec3(const lint agCoordinate[3], const int afCoordinate[3]);
-        Vec3(lint * const g, Real * const r);
-        Vec3(const lint gscaler, const Real scaler);
+        Vec3(lint * const g, Ogre::Real * const r);
+        Vec3(const lint gscaler, const Ogre::Real scaler);
     };
 };
 
