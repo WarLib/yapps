@@ -80,5 +80,5 @@ public:
     void operator*=(double val);
     Ordinate operator*(double val) const;
 };
-*/
+*/ 
 #endif
