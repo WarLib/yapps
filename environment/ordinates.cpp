@@ -79,6 +79,10 @@ void Ordinate::operator*=(double val) {
 }
 
 Ordinate Ordinate::operator*(double val) const {
+<<<<<<< HEAD
+=======
+    
+>>>>>>> be121d877ecd90db4bbfda0ab7b37715053b98b0
     //
     return Ordinate(_x * val, _y * val, _z * val);
 }

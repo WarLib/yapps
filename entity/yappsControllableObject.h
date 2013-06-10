@@ -2,7 +2,7 @@
 #define __yappsControllableObject_h_
 
 
-#include "yappsInput.h"
+#include "../input/yappsInput.h"
 
 
 class yappsControllableObject:public yappsListener

@@ -36,9 +36,7 @@ mMouse(0),
 mKeyboard(0) {
     yInputManager = yappsInput::getInstance();
 
-    yappsControllableObject* TESTOBJEKT = new yappsSpacerock();
 
-    yInputManager->subscribe(TESTOBJEKT);
 }
 
 //-------------------------------------------------------------------------------------
@@ -193,11 +191,11 @@ void yappsWindow::loadResources(void) {
 
 void yappsWindow::go(void) {
 #ifdef _DEBUG
-    mResourcesCfg = "resources_d.cfg";
-    mPluginsCfg = "plugins_d.cfg";
+    mResourcesCfg = "ressources/etc/resources_d.cfg";
+    mPluginsCfg = "ressources/etc/plugins_d.cfg";
 #else
-    mResourcesCfg = "resources.cfg";
-    mPluginsCfg = "plugins.cfg";
+    mResourcesCfg = "ressources/etc/resources.cfg";
+    mPluginsCfg = "ressources/etc/plugins.cfg";
 #endif
 
     if (!setup())
@@ -409,6 +407,9 @@ void yappsWindow::createScene(void) {
     mSceneMgr->setAmbientLight(Ogre::ColourValue(0.5f, 0.5f, 0.5f));
     mSceneMgr->setSkyBox(true, "MySky");
 
+    yappsControllableObject* TESTOBJEKT = new yappsObject(mSceneMgr, "Something", "yappsShip");
+    yInputManager->subscribe(TESTOBJEKT);
+
     Galaxy & MyGalaxy(Galaxy::GetGalaxy(n, 8, seed, true));
     System** MySystems = MyGalaxy.GetSystems(n);
     /*for (int i = 0; i < n; i++) {
@@ -444,7 +445,6 @@ void yappsWindow::createScene(void) {
         }
 
         SystemNode->scale(thisObject.GetRadius()*0.5, thisObject.GetRadius()*0.5, thisObject.GetRadius()*0.5);
-
     }
 
 
