@@ -226,14 +226,14 @@ void System::ConnectTo(int n_systems, System** systems) {
 
 StellarObject** System::GetObjects(int& n) {
     if (_n_objects == 0) {
-        fstream MyFile("system.txt", ios::out);
+  //      fstream MyFile("system.txt", ios::out);
         Init();
-        for (int i = 0; i < _n_objects; i++) {
-            MyFile.precision(10);
-            MyFile << _objects[i]->GetCenter()[0] << "\t" << _objects[i]->GetCenter()[1] << "\t" << _objects[i]->GetCenter()[2] << "\t" << _objects[i]->GetRadius() << "\t";
-            MyFile << sqrt(pow(_objects[i]->GetCenter()[0], 2.0) + pow(_objects[i]->GetCenter()[2], 2.0)) << endl;
-        }
-        MyFile.close();
+   //     for (int i = 0; i < _n_objects; i++) {
+       //     MyFile.precision(10);
+       //     MyFile << _objects[i]->GetCenter()[0] << "\t" << _objects[i]->GetCenter()[1] << "\t" << _objects[i]->GetCenter()[2] << "\t" << _objects[i]->GetRadius() << "\t";
+        //    MyFile << sqrt(pow((float)_objects[i]->GetCenter()[0], 2.0) + pow((float)_objects[i]->GetCenter()[2], 2.0)) << endl;
+     //   }
+     //   MyFile.close();
     }
     n = _n_objects;
     return _objects;

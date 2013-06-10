@@ -1,6 +1,9 @@
 #ifndef __yappsWindow_h_
 #define __yappsWindow_h_
 
+//$(OGRE_HOME)\Bin\$(Configuration)\$(ProjectName).exe
+//$(OGRE_HOME)\Bin\$(Configuration)
+
 #include <OgreCamera.h>
 #include <OgreEntity.h>
 #include <OgreLogManager.h>

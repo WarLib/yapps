@@ -189,12 +189,23 @@ void yappsWindow::loadResources(void) {
 //-------------------------------------------------------------------------------------
 
 void yappsWindow::go(void) {
+
+#if OGRE_PLATFORM == OGRE_PLATFORM_WIN32
+#ifdef _DEBUG
+    mResourcesCfg = "ressources/etc/win_resources_d.cfg";
+    mPluginsCfg = "ressources/etc/win_plugins_d.cfg";
+#else
+    mResourcesCfg = "ressources/etc/win_resources.cfg";
+    mPluginsCfg = "ressources/etc/win_plugins.cfg";
+#endif
+#else
 #ifdef _DEBUG
     mResourcesCfg = "ressources/etc/resources_d.cfg";
     mPluginsCfg = "ressources/etc/plugins_d.cfg";
 #else
     mResourcesCfg = "ressources/etc/resources.cfg";
     mPluginsCfg = "ressources/etc/plugins.cfg";
+#endif
 #endif
 
     if (!setup())
@@ -437,7 +448,9 @@ void yappsWindow::createScene(void) {
         Ogre::SceneNode* SystemNode = mSceneMgr->getRootSceneNode()->createChildSceneNode(name.str(), Ogre::Vector3(thisObject.GetCenter()*500));
         SystemNode->attachObject(System);
 
-        SystemNode->scale(thisObject.GetRadius()*0.01, thisObject.GetRadius()*0.01, thisObject.GetRadius()*0.01);
+		cout << name.str() << " at " << thisObject.GetCenter()*500 << endl;
+
+        SystemNode->scale(thisObject.GetRadius()*0.5, thisObject.GetRadius()*0.5, thisObject.GetRadius()*0.5);
     }
 
 
