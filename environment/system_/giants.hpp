@@ -5,7 +5,7 @@
 class Giant: public StellarObject {
 protected:
 public:
-	Giant(Ogre::Vector3 center, Ogre::Vector3 rot);
+	Giant(Vec3 center, Ogre::Vector3 rot);
 	void Update();
 };
 

@@ -9,12 +9,13 @@
 #include "giants.hpp"
 
 using namespace std;
+using namespace Yapps;
 
 class Galaxy;
 
 class System {
 private:
-	Ordinate _center;
+	Vec3 _center;
 
 
 	int _n_connections;
@@ -26,9 +27,9 @@ private:
 	Galaxy* _parent;
 public:
 	double _colonization;
-	System(Ordinate center, Galaxy* parent);
+	System(Vec3 center, Galaxy* parent);
 	~System();
-	Ordinate& GetCenter(void);
+	Vec3& GetCenter(void);
 
 	void SetColonization(double value);
 	void Init(void);

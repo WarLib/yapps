@@ -3,7 +3,7 @@
 
 const Ogre::String ThisType = "asteroids";
 
-Asteroid::Asteroid(Ogre::Vector3 center, Ogre::Vector3 rot) : StellarObject(center, rot, 0) {
+Asteroid::Asteroid(Vec3 center, Ogre::Vector3 rot) : StellarObject(center, rot, 0) {
     double den, mass;
     Random & RANDGEN(Random::Instance());
     ReadCfg(ThisType, den, mass);

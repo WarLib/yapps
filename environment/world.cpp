@@ -13,8 +13,9 @@
 class vec_compare {
 public:
 
-    bool operator() (const Ogre::Vector3& lhs, const Ogre::Vector3& rhs) const {
-        return lhs.length() < rhs.length();
+    bool operator() (const Vec3& lhs, const Vec3& rhs) const {
+        cout << "comparing " << lhs.GlobalLength() << " with " << rhs.GlobalLength() << endl;
+        return lhs.GlobalLength() < rhs.GlobalLength();
     }
 };
 
@@ -45,8 +46,10 @@ Galaxy::Galaxy(const int& n_systems, double min_colonization, const string& seed
     }
 
     //generate n random, unique points and spread them with rising distance around the center
+    cout << "building galaxy.." << endl;
     MakeSystems();
     colonize();
+    cout << "finished building galaxy!" << endl;
 }
 
 Galaxy::~Galaxy() {
@@ -57,24 +60,27 @@ Galaxy::~Galaxy() {
 }
 
 void Galaxy::MakeSystems(void) {
-    set<Ordinate> points;
-    set<Ordinate>::iterator points_it;
+    set<Vec3, vec_compare> points;
+    set<Vec3, vec_compare>::iterator points_it;
 
     int next_jump = 30;
     int index = 0;
 
-    Ordinate center(0, 0, 0);
+    Vec3 center(0, 0, 0);
     while (points.size() < (_n_systems - 1)) {
-        Ordinate tmp(rand_gen.normal(), rand_gen.normal(), rand_gen.normal());
-        while (tmp.Distance(center) < next_jump - (next_jump / 2)) {
+        Vec3 tmp(rand_gen.normal(), rand_gen.normal(), rand_gen.normal());
+        while (tmp.LocalDistance(center) < next_jump - (next_jump / 2)) {
             tmp *= 1.5;
         }
-        while (tmp.Distance(center) > next_jump + ((next_jump * 2) - next_jump)) {
+        while (tmp.LocalDistance(center) > next_jump + ((next_jump * 2) - next_jump)) {
             tmp *= 0.75;
         }
 
         if (points.insert(tmp).second) {
             index++;
+        } else {
+            cout << "same point? @" << index << endl;
+            //ERROR!!
         }
         if (index == next_jump) {
             next_jump = next_jump << 1;
@@ -91,11 +97,11 @@ void Galaxy::MakeSystems(void) {
 }
 
 void Galaxy::colonize(void) {
-    const double max_distance = _systems[_n_systems - 1]->GetCenter().Value();
+    const double max_distance = _systems[_n_systems - 1]->GetCenter().LocalLength();
     for (int idx = 0; idx < _n_systems; idx++) {
         unsigned int random = rand_gen.random();
         double val = 100 * ((double) random / (double) rand_gen.GetMax());
-        double fak = pow(((max_distance - (_systems[idx]->GetCenter().Value())) / max_distance), 4.0);
+        double fak = pow(((max_distance - (_systems[idx]->GetCenter().LocalLength())) / max_distance), 4.0);
         double result = val * fak;
         if (result > _min_colonization) {
             _n_colonized_systems++;
@@ -115,7 +121,7 @@ System** Galaxy::GetSystems(int& n) {
 
 //system
 
-System::System(Ordinate center, Galaxy* parent) {
+System::System(Vec3 center, Galaxy* parent) {
     _center = center;
     _colonization = 0;
     _parent = parent;
@@ -133,7 +139,7 @@ System::~System() {
     }
 }
 
-Ordinate& System::GetCenter(void) {
+Vec3& System::GetCenter(void) {
     return _center;
 }
 
@@ -141,7 +147,7 @@ void System::SetColonization(double value) {
     _colonization = value;
 }
 
-void Rotate(double angle, Ogre::Vector3 & vec) {
+void Rotate(double angle, Vec3 & vec) {
     angle = angle * Ogre::Math::PI / 180;
     double x = vec[0];
     double z = vec[2];
@@ -159,11 +165,11 @@ double betrag(double in) {
 void System::Init(void) {
     //todo: Initialize the world when someone enters the first time
     _n_objects = _parent->rand_gen.random(4, 14);
-    Ogre::Vector3 center(0, 0, 0);
-    set<Ogre::Vector3, vec_compare> points;
-    set<Ogre::Vector3, vec_compare>::iterator points_it;
+    Vec3 center(0, 0, 0);
+    set<Vec3, vec_compare> points;
+    set<Vec3, vec_compare>::iterator points_it;
 
-    double next_jump,next_jump_t;
+    double next_jump, next_jump_t;
     int index = 0;
     double theta = 360 / (double) (_n_objects - 1);
 
@@ -172,15 +178,13 @@ void System::Init(void) {
     next_jump = _objects[0]->GetRadius() * 5;
     next_jump_t = next_jump;
 
-    Ogre::Vector3 ref(0, 0, 1);
-
     while (points.size() < (_n_objects - 1)) {
-        Ogre::Vector3 tmp(0, _parent->rand_gen.normal(), _parent->rand_gen.gamma(7.0));
+        Vec3 tmp(0, _parent->rand_gen.normal(), _parent->rand_gen.gamma(7.0));
         while (tmp.distance(center) < next_jump - (next_jump / 2)) {
-            tmp *= Ogre::Vector3(0, 1.01, 1.5);
+            tmp *= Vec3(0, 1.01, 1.5);
         }
         while (tmp.distance(center) > next_jump + ((next_jump * 2) - next_jump)) {
-            tmp *= Ogre::Vector3(0, 0.95, 0.75);
+            tmp *= Vec3(0, 0.95, 0.75);
         }
 
         Rotate(theta * (index - 1) * betrag(_parent->rand_gen.normal()), tmp);
@@ -225,16 +229,18 @@ void System::ConnectTo(int n_systems, System** systems) {
 }
 
 StellarObject** System::GetObjects(int& n) {
+    cout << "initializing..." << endl;
     if (_n_objects == 0) {
-  //      fstream MyFile("system.txt", ios::out);
+        fstream MyFile("system.txt", ios::out);
         Init();
-   //     for (int i = 0; i < _n_objects; i++) {
-       //     MyFile.precision(10);
-       //     MyFile << _objects[i]->GetCenter()[0] << "\t" << _objects[i]->GetCenter()[1] << "\t" << _objects[i]->GetCenter()[2] << "\t" << _objects[i]->GetRadius() << "\t";
-        //    MyFile << sqrt(pow((float)_objects[i]->GetCenter()[0], 2.0) + pow((float)_objects[i]->GetCenter()[2], 2.0)) << endl;
-     //   }
-     //   MyFile.close();
+        for (int i = 0; i < _n_objects; i++) {
+            MyFile.precision(10);
+            MyFile << _objects[i]->GetCenter()[0] << "\t" << _objects[i]->GetCenter()[1] << "\t" << _objects[i]->GetCenter()[2] << "\t" << _objects[i]->GetRadius() << "\t";
+            MyFile << sqrt(pow((float) _objects[i]->GetCenter()[0], 2.0) + pow((float) _objects[i]->GetCenter()[2], 2.0)) << endl;
+        }
+        MyFile.close();
     }
+    cout << "INITIALZED!!!!" << endl;
     n = _n_objects;
     return _objects;
 }

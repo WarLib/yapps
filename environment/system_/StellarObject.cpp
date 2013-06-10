@@ -7,14 +7,14 @@
 using namespace std;
 #endif
 
-StellarObject::StellarObject(Ogre::Vector3 center, Ogre::Vector3 rot, double colonization) {
+StellarObject::StellarObject(Vec3 center, Ogre::Vector3 rot, double colonization) {
     _center = center;
     _rot = rot;
     _colonization = colonization;
     mConfigFile = "stellar.cfg";
 }
 
-const Ogre::Vector3& StellarObject::GetCenter(void) const {
+const Vec3& StellarObject::GetCenter(void) const {
     return _center;
 }
 

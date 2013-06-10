@@ -3,10 +3,13 @@
 
 #include <OgreVector3.h>
 #include <OgreString.h>
+#include "ordinates.hpp"
+
+using namespace Yapps;
 
 class StellarObject {
 protected:
-	Ogre::Vector3 _center;
+	Vec3 _center;
 	Ogre::Vector3 _rot;
 	double _colonization;
 
@@ -16,9 +19,9 @@ protected:
         
         void ReadCfg(const Ogre::String& type, double& den, double& mass);
 public:
-	StellarObject(Ogre::Vector3 center, Ogre::Vector3 rot, double colonization);
+	StellarObject(Vec3 center, Ogre::Vector3 rot, double colonization);
 	virtual void Update() = 0;
-	const Ogre::Vector3& GetCenter(void) const;
+	const Vec3& GetCenter(void) const;
 	const Ogre::Vector3& GetRotation(void) const;
 
 	void SetDensity(double density);
