@@ -2,10 +2,10 @@
 #define __yappsControllableObject_h_
 
 
-#include "../input/yappsInput.h"
+#include "../input/Input.h"
 
-
-class yappsControllableObject:public yappsListener
+namespace Yapps {
+class ControllableObject:public Listener
 {
 
 public:
@@ -38,5 +38,5 @@ protected:
 
 };
 
-
+};
 #endif

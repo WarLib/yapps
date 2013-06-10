@@ -34,7 +34,7 @@ mShutDown(false),
 mInputManager(0),
 mMouse(0),
 mKeyboard(0) {
-    yInputManager = yappsInput::getInstance();
+    yInputManager = Yapps::Input::getInstance();
 
 
 }
@@ -418,7 +418,7 @@ void yappsWindow::createScene(void) {
     mSceneMgr->setAmbientLight(Ogre::ColourValue(0.5f, 0.5f, 0.5f));
     mSceneMgr->setSkyBox(true, "MySky");
 
-    yappsControllableObject* TESTOBJEKT = new yappsObject(mSceneMgr, "Something", "yappsShip");
+    Yapps::ControllableObject* TESTOBJEKT = new Yapps::Object(mSceneMgr, "Something", "yappsShip");
     yInputManager->subscribe(TESTOBJEKT);
 
     Galaxy & MyGalaxy(Galaxy::GetGalaxy(n, 8, seed, true));

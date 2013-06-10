@@ -1,9 +1,9 @@
-#include "yappsControllableObject.h"
+#include "ControllableObject.h"
+
+using namespace Yapps;
 
 
-
-
-void yappsControllableObject::dispatch(std::string msg)
+void ControllableObject::dispatch(std::string msg)
 {
     std::cout << "working on command!"<< std::endl;
 
