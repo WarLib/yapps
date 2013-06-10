@@ -22,14 +22,14 @@
 #include <SdkCameraMan.h>
 
 #include "environment/world.hpp"
-#include "entity/yappsObject.h"
-#include "input/yappsInput.h"
-#include "entity/yappsControllableObject.h"
+#include "entity/Object.h"
+#include "input/Input.h"
+#include "entity/ControllableObject.h"
 #include <sstream>
 #include <string>
 #include <iostream>
 
-class yappsWindow : public Ogre::FrameListener, public Ogre::WindowEventListener, public OIS::KeyListener, public OIS::MouseListener, OgreBites::SdkTrayListener, public  yappsListener
+class yappsWindow : public Ogre::FrameListener, public Ogre::WindowEventListener, public OIS::KeyListener, public OIS::MouseListener, OgreBites::SdkTrayListener, public  Yapps::Listener
 {
 public:
     yappsWindow(void);
@@ -86,7 +86,7 @@ protected:
     OIS::Mouse*    mMouse;
     OIS::Keyboard* mKeyboard;
 
-    yappsInput* yInputManager;
+    Yapps::Input* yInputManager;
 
     void notify(std::string msg){std::cout << msg << std::endl;}
 };

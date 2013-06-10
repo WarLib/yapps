@@ -1,8 +1,9 @@
-#include "yappsInput.h"
+#include "Input.h"
 
 
+using namespace Yapps;
 
-void yappsInput::loadConfig()
+void Input::loadConfig()
 {
 
     /* Where to get the name of this? Global config i say!
@@ -46,6 +47,6 @@ void yappsInput::loadConfig()
 
 }
 
-void yappsInput::saveConfig(){
+void Input::saveConfig(){
 // do me!
 }

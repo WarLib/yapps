@@ -1,9 +1,9 @@
 
-#include "yappsObject.h"
+#include "Object.h"
 
 
-
-yappsObject::yappsObject(Ogre::SceneManager* mSceneMgr, std::string name, std::string type){
+using namespace Yapps;
+Object::Object(Ogre::SceneManager* mSceneMgr, std::string name, std::string type){
         this->mSceneMgr = mSceneMgr;
         std::string endungMesh = ".mesh";
         std::string myMesh = type+endungMesh;
@@ -17,20 +17,20 @@ yappsObject::yappsObject(Ogre::SceneManager* mSceneMgr, std::string name, std::s
 }
 
 
-Ogre::SceneNode *yappsObject::getSightNode() {
+Ogre::SceneNode *Object::getSightNode() {
     return mSightNode;
 }
 
-Ogre::SceneNode *yappsObject::getCameraNode() {
+Ogre::SceneNode *Object::getCameraNode() {
     return mCameraNode;
 }
 
-Ogre::Vector3 yappsObject::getWorldPosition() {
+Ogre::Vector3 Object::getWorldPosition() {
     return mMainNode->_getDerivedPosition();
 }
 
 
-void yappsObject::callback(){
+void Object::callback(){
 //Do stuff here you have to do on any frame
 
 
