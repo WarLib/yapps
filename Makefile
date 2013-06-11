@@ -3,7 +3,7 @@
 
 # Compiler Settings
 CC=g++
-CFLAGS= `pkg-config --cflags OGRE OIS` -Wall -std=c++11
+CFLAGS= `pkg-config --cflags OGRE OIS` -Wall
 LDFLAGS= `pkg-config  --libs OGRE OIS`
 FOLDERS=$(shell  find . -type d -path './[!.]*')
 INCLUDE_FOLDERS=$(addprefix -I,$(patsubst %,%/,$(FOLDERS)))
