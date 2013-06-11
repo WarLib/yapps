@@ -59,6 +59,7 @@ namespace Yapps {
 
         double AngleToGlobal(const Vec3& vgl) const;
         double AngleToLocal(const Vec3& vgl);
+
     };
 };
 
@@ -80,5 +81,5 @@ public:
     void operator*=(double val);
     Ordinate operator*(double val) const;
 };
-*/ 
+*/
 #endif

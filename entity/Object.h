@@ -33,7 +33,6 @@ class Object;
 
 #include "Funktor.h"
 #include "ControllableObject.h"
-#include "Inertia.h"
 
 #include "../environment/world.hpp"
 
@@ -56,10 +55,10 @@ public:
     std::list<Yapps::Funktor*> tellMeAboutFrames;
 
 
-    Yapps::Vec3 bla;
+    Yapps::Vec3 position;
 
-    Inertia Rotation;
-
+    Yapps::Vec3 Rotation;
+    Yapps::Vec3 Bewegung;
 
     virtual void frame(Ogre::Real elapsed);
 

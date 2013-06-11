@@ -298,5 +298,5 @@ Ordinate Ordinate::operator*(double val) const {
     //
     return Ordinate(_x * val, _y * val, _z * val);
 }
- * 
+ *
  * */

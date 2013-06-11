@@ -3,8 +3,11 @@
 #include <iostream>
 #include <OgreMath.h>
 
+
+
 //declared in controllableObject
 #include "Object.h"
+#include "../environment/ordinates.hpp"
 
 namespace Yapps {
 class Funktor {
@@ -23,32 +26,33 @@ class Funktor {
 
 class trn_pitch_d: public Funktor {
     public:
-
         void call();
     };
 class trn_pitch_u: public Funktor {
     public:
-
         void call();
     };
 class trn_yaw_l: public Funktor {
     public:
-
         void call();
     };
 class trn_yaw_r: public Funktor {
     public:
+        void call();
+    };
 
+class mv_accelerate: public Funktor {
+    public:
         void call();
     };
 
 
-
-
-
 class rot_inertialistener: public Funktor {
     public:
-
+        void frame(Ogre::Real elapsed); // <--- doesnt really take elapsed atm
+    };
+class mv_inertialistener: public Funktor {
+    public:
         void frame(Ogre::Real elapsed); // <--- doesnt really take elapsed atm
     };
 };
