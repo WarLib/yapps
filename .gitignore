@@ -1,4 +1,6 @@
 *.dll
 *.o
+*.log
 ogre.cfg
 yapps.exe
+yapps

@@ -21,7 +21,7 @@
 #include <SdkTrays.h>
 #include <SdkCameraMan.h>
 
-#include <RendererModules/Ogre/CEGUIOgreRenderer.h>
+#include <RendererModules\Ogre\CEGUIOgreRenderer.h>
 #include <CEGUI.h>
 
 #include "environment/world.hpp"

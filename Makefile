@@ -3,8 +3,8 @@
 
 # Compiler Settings
 CC=g++
-CFLAGS= `pkg-config --cflags OGRE OIS` -Wall
-LDFLAGS= `pkg-config  --libs OGRE OIS`
+CFLAGS= `pkg-config --cflags OGRE OIS CEGUI` -Wall
+LDFLAGS= `pkg-config  --libs OGRE OIS CEGUI` -lCEGUIOgreRenderer -lCEGUIBase -lCEGUIFreeImageImageCodec -lCEGUIExpatParser -lCEGUIFalagardWRBase -lfreeimage -lpcre -ldl -lexpat
 FOLDERS=$(shell  find . -type d -path './[!.]*')
 INCLUDE_FOLDERS=$(addprefix -I,$(patsubst %,%/,$(FOLDERS)))
 SOURCES=$(shell  find . -name '*.cpp' -not -name '*testing*')

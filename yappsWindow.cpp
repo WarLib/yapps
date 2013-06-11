@@ -226,6 +226,7 @@ void yappsWindow::go(void) {
 	mPluginsCfg = "ressources/etc/plugins.cfg";
 #endif
 #endif
+        cout << "!!!!USING CONFIG: " << mResourcesCfg << " !!!!!!!!!!!!!!!!!!" << endl;
 
 	if (!setup())
 		return;
