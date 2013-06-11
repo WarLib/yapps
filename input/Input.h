@@ -1,7 +1,16 @@
 #ifndef __yappsInput_h_
 #define __yappsInput_h_
 
+//Bruteforce importing
 
+#include <OgreCamera.h>
+#include <OgreEntity.h>
+#include <OgreLogManager.h>
+#include <OgreRoot.h>
+#include <OgreViewport.h>
+#include <OgreSceneManager.h>
+#include <OgreRenderWindow.h>
+#include <OgreConfigFile.h>
 
 #include <OISEvents.h>
 #include <OISInputManager.h>
@@ -10,6 +19,7 @@
 
 #include <string>
 #include <map>
+#include <list>
 #include <sstream>
 #include <iostream>
 #include <fstream>
@@ -25,6 +35,8 @@ class Listener {
         virtual void notify(std::string msg) {
             dispatch(msg);
             };
+        virtual void frame(Ogre::Real elapsed){
+        };
     };
 
 
@@ -33,7 +45,10 @@ class Input {
         Yapps::Listener** Callbacks;
         int CallbacksLen;
 
+        std::list<Listener*> frameListener;
+
         std::map<std::string, std::string> keybinds;
+
 
     public:
         static Yapps::Input*getInstance() {
@@ -43,11 +58,21 @@ class Input {
                 }
             return instance;
             }
-        void subscribe( Yapps::Listener* client ) {
+        void subscribeKeys( Yapps::Listener* client ) {
             Callbacks[CallbacksLen] = client;
             CallbacksLen++;
             }
-        void publish (std::string arg) {
+        void subscribeFrames( Yapps::Listener* client ) {
+           frameListener.push_back(client);
+            }
+        void publishFrame( Ogre::Real Elapsed ){
+            for(std::list<Listener*>::iterator iter = frameListener.begin(); iter != frameListener.end(); iter++)
+                (*iter)->frame(Elapsed);
+
+
+        }
+
+        void publishKeys (std::string arg) {
             std::stringstream o;
             o << arg;
             std::cout << o.str() << std::endl;

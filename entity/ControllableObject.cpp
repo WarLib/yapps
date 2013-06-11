@@ -5,6 +5,7 @@ using namespace Yapps;
 
 void ControllableObject::dispatch(std::string msg)
 {
+    //std::cout<< msg << " is beeing held"<<std::endl;
     try{
    if (bindings[msg])bindings[msg]->call();
     }

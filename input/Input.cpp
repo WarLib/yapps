@@ -9,7 +9,7 @@ void Input::loadConfig()
     /* Where to get the name of this? Global config i say!
     */
     std::string filePosition = "ressources/etc/keyboard.conf";
-    char buffer[256] = {0};
+
     std::string buff = "";
 
     std::fstream configFile;

@@ -1,6 +1,7 @@
 #ifndef __yappsFunktor_h_
 #define __yappsFunktor_h_
 #include <iostream>
+#include <OgreMath.h>
 
 //declared in controllableObject
 #include "Object.h"
@@ -10,13 +11,9 @@ class Funktor {
     public:
         Object* parent;
 
-
-        Funktor() {
-
-            };
-        void staticMovement();
+        virtual void setParent ( Object * p){parent = p;};
         virtual void call() {
-            staticMovement();
+
             };
 
 
@@ -27,12 +24,8 @@ class Funktor {
 
 class mv_forward: public Funktor {
     public:
-        mv_forward() {
 
-            };
-        void call() {
-            std::cout<<"BLAAAAH"<< std::endl;
-            };
+        void call() ;
 
     };
 

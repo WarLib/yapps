@@ -60,7 +60,7 @@ bool yappsWindow::configure(void) {
     if (mRoot->showConfigDialog()) {
         // If returned true, user clicked OK so initialise
         // Here we choose to let the system create a default rendering window by passing 'true'
-        mWindow = mRoot->initialise(true, "TutorialApplication Render Window");
+        mWindow = mRoot->initialise(true, "Yapps V0.01*E^-5 Alpha");
 
         return true;
     } else {
@@ -275,12 +275,13 @@ bool yappsWindow::frameRenderingQueued(const Ogre::FrameEvent& evt) {
         }
     }
 
+    yInputManager->publishFrame(evt.timeSinceLastFrame);
     return true;
 }
 //-------------------------------------------------------------------------------------
 
 bool yappsWindow::keyPressed(const OIS::KeyEvent &arg) {
-    yInputManager->publish(mKeyboard->getAsString(arg.key)); //***************** FANGEN DER KEYS
+    yInputManager->publishKeys(mKeyboard->getAsString(arg.key)); //***************** FANGEN DER KEYS
 
     if (mTrayMgr->isDialogVisible()) return true; // don't process any more keys if dialog is up
 
@@ -358,7 +359,7 @@ bool yappsWindow::keyPressed(const OIS::KeyEvent &arg) {
         mShutDown = true;
     }
 
-    mCameraMan->injectKeyDown(arg);
+    //mCameraMan->injectKeyDown(arg);
     return true;
 }
 
@@ -419,7 +420,9 @@ void yappsWindow::createScene(void) {
     mSceneMgr->setSkyBox(true, "MySky");
 
     Yapps::ControllableObject* TESTOBJEKT = new Yapps::Object(mSceneMgr, "Something", "yappsShip");
-    yInputManager->subscribe(TESTOBJEKT);
+    //mRoot->addFrameListener( (Ogre::FrameListener*)TESTOBJEKT);
+    yInputManager->subscribeKeys(TESTOBJEKT);
+    yInputManager->subscribeFrames(TESTOBJEKT);
 
     Galaxy & MyGalaxy(Galaxy::GetGalaxy(n, 8, seed, true));
     System** MySystems = MyGalaxy.GetSystems(n);

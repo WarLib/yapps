@@ -12,9 +12,9 @@ Object::Object(Ogre::SceneManager* mSceneMgr, std::string name, std::string type
         mMainNode->attachObject(mEntity);
 
         mMainNode->scale(0.1,0.1,0.1);
-        tempPos[0]=0;tempPos[1]=0;tempPos[2]=0;
 
         Funktor* forward = new mv_forward();
+        forward->setParent(this);
         abilities.push_back(forward);
         bind("forward",forward);
 
@@ -34,8 +34,9 @@ Ogre::Vector3 Object::getWorldPosition() {
 }
 
 
-void Object::callback(){
-//Do stuff here you have to do on any frame
 
+void Object::frame(Ogre::Real elapsed){
+ std::cout <<"YEHAW"<< std::endl;
 
-}
+return ;
+ }

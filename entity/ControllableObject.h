@@ -20,6 +20,7 @@ class ControllableObject:public Listener {
         // Eine methode für jede funktion die ein steuerbares Objekt haben kann //
 
         virtual void dispatch(std::string msg);
+        virtual void frame(Ogre::Real elapsed){};
 
         bool bind(std::string msg, Funktor* callback) {
             try {
