@@ -3,17 +3,42 @@
 using namespace Yapps;
 
 
-        void mv_forward::call() {
+        void trn_pitch_d::call() {
             std::cout<<"BLAAAAH"<< std::endl;
             std::cout << parent->mMainNode->getPosition() << std::endl;
-            //Ogre::Quaternion oldRot = parent->mMainNode->getOrientation();
 
-            //oldRot[2]+=1;
-
-            //parent->mMainNode->setOrientation(oldRot);
-
-            //std::cout << oldRot << std::endl;
-            Ogre::Degree winkel;
-            winkel = 1.0;
-            parent->mMainNode->pitch(winkel);
+            parent->Rotation.vector[1] += Ogre::Radian(0.01);
             };
+
+
+        void trn_pitch_u::call() {
+            std::cout<<"BLAAAAH"<< std::endl;
+            std::cout << parent->mMainNode->getPosition() << std::endl;
+
+            parent->Rotation.vector[1] -=  Ogre::Radian(0.01);
+            };
+
+        void trn_yaw_l::call() {
+            std::cout<<"BLAAAAH"<< std::endl;
+            std::cout << parent->mMainNode->getPosition() << std::endl;
+
+            parent->Rotation.vector[0] += Ogre::Radian(0.01);
+            };
+
+
+        void trn_yaw_r::call() {
+            std::cout<<"BLAAAAH"<< std::endl;
+            std::cout << parent->mMainNode->getPosition() << std::endl;
+
+            parent->Rotation.vector[0] -= Ogre::Radian(0.01);
+            };
+
+
+
+
+
+        void rot_inertialistener::frame(Ogre::Real elapsed){
+            std::cout << "pitching"<< std::endl;
+            parent->mMainNode->pitch( parent->Rotation.vector[1] );
+            parent->mMainNode->yaw( parent->Rotation.vector[0] );
+        };

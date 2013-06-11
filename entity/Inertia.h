@@ -2,13 +2,14 @@
 #define __yappsInertia_h_
 #include <iostream>
 
+#include <OgreMath.h>
 
 namespace Yapps
 {
 class Inertia
 {
 public:
-    float vector[3];
+    Ogre::Degree vector[3];
 
     Inertia()
     {

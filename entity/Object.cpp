@@ -11,12 +11,36 @@ Object::Object(Ogre::SceneManager* mSceneMgr, std::string name, std::string type
         mMainNode = mSceneMgr->getRootSceneNode()->createChildSceneNode(name, Ogre::Vector3(0,0,0)); //+Position!
         mMainNode->attachObject(mEntity);
 
-        mMainNode->scale(0.1,0.1,0.1);
+        mMainNode->scale(0.01,0.01,0.01);
 
-        Funktor* forward = new mv_forward();
-        forward->setParent(this);
-        abilities.push_back(forward);
-        bind("forward",forward);
+        Funktor* rotDown = new trn_pitch_d();
+        rotDown->setParent(this);
+        abilities.push_back(rotDown);
+        bind("forward",rotDown);
+
+        Funktor* rotUp = new trn_pitch_u();
+        rotUp->setParent(this);
+        abilities.push_back(rotUp);
+        bind("backward",rotUp);
+
+        Funktor* rotLeft = new trn_yaw_l();
+        rotLeft->setParent(this);
+        abilities.push_back(rotLeft);
+        bind("left",rotLeft);
+
+        Funktor* rotRight = new trn_yaw_r();
+        rotRight->setParent(this);
+        abilities.push_back(rotRight);
+        bind("right",rotRight);
+
+
+
+        Funktor* rotlis = new rot_inertialistener();
+        rotlis->setParent(this);
+        abilities.push_back(rotlis);
+
+        tellMeAboutFrames.push_back(rotlis);
+
 
 }
 
@@ -36,7 +60,8 @@ Ogre::Vector3 Object::getWorldPosition() {
 
 
 void Object::frame(Ogre::Real elapsed){
- std::cout <<"YEHAW"<< std::endl;
+for (std::list<Funktor*>::iterator iter = tellMeAboutFrames.begin(); iter != tellMeAboutFrames.end(); iter++)
+    (*iter)->frame(elapsed);
 
 return ;
  }

@@ -59,7 +59,7 @@ public:
     Yapps::Vec3 bla;
 
     Inertia Rotation;
-    Inertia Impulse;
+
 
     virtual void frame(Ogre::Real elapsed);
 

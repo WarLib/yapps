@@ -12,9 +12,8 @@ class Funktor {
         Object* parent;
 
         virtual void setParent ( Object * p){parent = p;};
-        virtual void call() {
-
-            };
+        virtual void call() {};
+        virtual void frame(Ogre::Real elapsed){};
 
 
     };
@@ -22,13 +21,37 @@ class Funktor {
 
 
 
-class mv_forward: public Funktor {
+class trn_pitch_d: public Funktor {
     public:
 
-        void call() ;
+        void call();
+    };
+class trn_pitch_u: public Funktor {
+    public:
 
+        void call();
+    };
+class trn_yaw_l: public Funktor {
+    public:
+
+        void call();
+    };
+class trn_yaw_r: public Funktor {
+    public:
+
+        void call();
     };
 
 
+
+
+
+class rot_inertialistener: public Funktor {
+    public:
+
+        void frame(Ogre::Real elapsed); // <--- doesnt really take elapsed atm
+    };
 };
+
+
 #endif
