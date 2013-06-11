@@ -21,6 +21,9 @@
 #include <SdkTrays.h>
 #include <SdkCameraMan.h>
 
+#include <RendererModules\Ogre\CEGUIOgreRenderer.h>
+#include <CEGUI.h>
+
 #include "environment/world.hpp"
 #include "entity/Object.h"
 #include "input/Input.h"
@@ -67,6 +70,8 @@ protected:
     //Unattach OIS before window shutdown (very important under Linux)
     virtual void windowClosed(Ogre::RenderWindow* rw);
 
+	CEGUI::OgreRenderer* mRenderer;
+
     Ogre::Root *mRoot;
     Ogre::Camera* mCamera;
     Ogre::SceneManager* mSceneMgr;
@@ -75,9 +80,9 @@ protected:
     Ogre::String mPluginsCfg;
 
     // OgreBites
-    OgreBites::SdkTrayManager* mTrayMgr;
+    //OgreBites::SdkTrayManager* mTrayMgr;
     OgreBites::SdkCameraMan* mCameraMan;       // basic camera controller
-    OgreBites::ParamsPanel* mDetailsPanel;     // sample details panel
+    //OgreBites::ParamsPanel* mDetailsPanel;     // sample details panel
     bool mCursorWasVisible;                    // was cursor visible before dialog appeared
     bool mShutDown;
 

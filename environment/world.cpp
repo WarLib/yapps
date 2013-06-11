@@ -14,7 +14,6 @@ class vec_compare {
 public:
 
     bool operator() (const Vec3& lhs, const Vec3& rhs) const {
-        cout << "comparing " << lhs.GlobalLength() << " with " << rhs.GlobalLength() << endl;
         return lhs.GlobalLength() < rhs.GlobalLength();
     }
 };
@@ -236,7 +235,7 @@ StellarObject** System::GetObjects(int& n) {
         for (int i = 0; i < _n_objects; i++) {
             MyFile.precision(10);
             MyFile << _objects[i]->GetCenter()[0] << "\t" << _objects[i]->GetCenter()[1] << "\t" << _objects[i]->GetCenter()[2] << "\t" << _objects[i]->GetRadius() << "\t";
-            MyFile << sqrt(pow((float) _objects[i]->GetCenter()[0], 2.0) + pow((float) _objects[i]->GetCenter()[2], 2.0)) << endl;
+            MyFile << sqrt(pow((double)_objects[i]->GetCenter()[0], (double)2.0) + pow((double)_objects[i]->GetCenter()[2], (double)2.0)) << endl;
         }
         MyFile.close();
     }

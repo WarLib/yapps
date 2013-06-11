@@ -9,9 +9,7 @@ Vec3::Vec3(const Ogre::Real fX, const Ogre::Real fY, const Ogre::Real fZ) : Ogre
     _global.x = 0;
     _global.y = 0;
     _global.z = 0;
-    cout << "Got coordinates " << fX << "." << fY << "." << fZ << endl;
     gridify();
-    cout << "translated them to " << _global.x << "." << _global.y << "." << _global.z << "-" << fX << "." << fY << "." << fZ << endl;
 }
 
 Vec3::Vec3() : Vector3(0, 0, 0) {
@@ -221,7 +219,7 @@ double Vec3::LocalLength(void) const {
 }
 
 double Vec3::GlobalLength(void) const {
-    return sqrt(pow(_global.x * GRID_UNIT + x, 2.0) + pow(_global.y * GRID_UNIT + y, 2.0) + pow(_global.z * GRID_UNIT + z, 2.0));
+    return sqrt(pow((double)_global.x * GRID_UNIT + x, (double)2.0) + pow((double)_global.y * GRID_UNIT + y, (double)2.0) + pow((double)_global.z * GRID_UNIT + z, (double)2.0));
 }
 
 double Vec3::AngleToGlobal(const Vec3& vgl) const {
