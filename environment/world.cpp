@@ -14,7 +14,6 @@ class vec_compare {
 public:
 
     bool operator() (const Vec3& lhs, const Vec3& rhs) const {
-        cout << "comparing " << lhs.GlobalLength() << " with " << rhs.GlobalLength() << endl;
         return lhs.GlobalLength() < rhs.GlobalLength();
     }
 };

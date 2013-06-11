@@ -9,9 +9,7 @@ Vec3::Vec3(const Ogre::Real fX, const Ogre::Real fY, const Ogre::Real fZ) : Ogre
     _global.x = 0;
     _global.y = 0;
     _global.z = 0;
-    cout << "Got coordinates " << fX << "." << fY << "." << fZ << endl;
     gridify();
-    cout << "translated them to " << _global.x << "." << _global.y << "." << _global.z << "-" << fX << "." << fY << "." << fZ << endl;
 }
 
 Vec3::Vec3() : Vector3(0, 0, 0) {
