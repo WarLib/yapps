@@ -275,6 +275,8 @@ bool yappsWindow::frameRenderingQueued(const Ogre::FrameEvent& evt) {
         }
     }
 
+    std::cout << evt.timeSinceLastFrame << std::endl;
+    physics.dynamicsWorld->stepSimulation(evt.timeSinceLastFrame,10);
     yInputManager->publishFrame(evt.timeSinceLastFrame);
     return true;
 }
@@ -419,10 +421,23 @@ void yappsWindow::createScene(void) {
     mSceneMgr->setAmbientLight(Ogre::ColourValue(0.5f, 0.5f, 0.5f));
     mSceneMgr->setSkyBox(true, "MySky");
 
-    Yapps::ControllableObject* TESTOBJEKT = new Yapps::Object(mSceneMgr, "Something", "yappsShip");
+    Yapps::ControllableObject* TESTOBJEKT = new Yapps::Object(mSceneMgr, "Something", "yappsShip", Vec3(1,20,1) );
     //mRoot->addFrameListener( (Ogre::FrameListener*)TESTOBJEKT);
     yInputManager->subscribeKeys(TESTOBJEKT);
     yInputManager->subscribeFrames(TESTOBJEKT);
+    physics.dynamicsWorld->addRigidBody( dynamic_cast<Yapps::Object*>(TESTOBJEKT)->physicalMe->myBody );
+
+
+    TESTOBJEKT = new Yapps::Object(mSceneMgr, "SomethingElse", "yappsShip", Vec3(0,10,0) );
+    yInputManager->subscribeFrames(TESTOBJEKT);
+    physics.dynamicsWorld->addRigidBody( dynamic_cast<Yapps::Object*>(TESTOBJEKT)->physicalMe->myBody );
+
+
+    //TESTOBJEKT = new Yapps::Object(mSceneMgr, "Something", "yappsShip", Vec3(0,12,0));
+    //mRoot->addFrameListener( (Ogre::FrameListener*)TESTOBJEKT);
+    //physics.dynamicsWorld->addRigidBody( dynamic_cast<Yapps::Object*>(TESTOBJEKT)->physicalMe->myBody );
+
+
 
     Galaxy & MyGalaxy(Galaxy::GetGalaxy(n, 8, seed, true));
     System** MySystems = MyGalaxy.GetSystems(n);

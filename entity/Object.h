@@ -35,6 +35,7 @@ class Object;
 #include "ControllableObject.h"
 
 #include "../environment/world.hpp"
+#include "../physics/physics.h"
 
 namespace Yapps
 {
@@ -51,6 +52,8 @@ public:
     Ogre::Entity *mEntity; // Character entity
     Ogre::SceneManager *mSceneMgr; // Point of insertion
 
+    physicalEntity* physicalMe;
+
     std::list<Yapps::Funktor*> abilities;
     std::list<Yapps::Funktor*> tellMeAboutFrames;
 
@@ -63,7 +66,7 @@ public:
     virtual void frame(Ogre::Real elapsed);
 
 
-    Object(Ogre::SceneManager* mSceneMgr, std::string name, std::string type);
+    Object(Ogre::SceneManager* mSceneMgr, std::string name, std::string type, Vec3 pos = Vec3(0,0,0) );
 
     Ogre::SceneNode *getSightNode();
     Ogre::SceneNode *getCameraNode();

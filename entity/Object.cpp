@@ -3,7 +3,7 @@
 
 
 using namespace Yapps;
-Object::Object(Ogre::SceneManager* mSceneMgr, std::string name, std::string type){
+Object::Object(Ogre::SceneManager* mSceneMgr, std::string name, std::string type, Vec3 pos){
         this->mSceneMgr = mSceneMgr;
         std::string endungMesh = ".mesh";
         std::string myMesh = type+endungMesh;
@@ -12,7 +12,6 @@ Object::Object(Ogre::SceneManager* mSceneMgr, std::string name, std::string type
         mMainNode->attachObject(mEntity);
 
         mMainNode->scale(0.01,0.01,0.01);
-
 
 
 
@@ -53,6 +52,9 @@ Object::Object(Ogre::SceneManager* mSceneMgr, std::string name, std::string type
         tellMeAboutFrames.push_back(mvlis);
         tellMeAboutFrames.push_back(rotlis);
 
+        position = pos;
+        physicalMe = new physicalEntity(position);
+
 }
 
 
@@ -71,8 +73,13 @@ Ogre::Vector3 Object::getWorldPosition() {
 
 
 void Object::frame(Ogre::Real elapsed){
+
+    position = physicalMe->toYVec3();
+    std::cout << position << std::endl;
 for (std::list<Funktor*>::iterator iter = tellMeAboutFrames.begin(); iter != tellMeAboutFrames.end(); ++iter)
     (*iter)->frame(elapsed);
+
+    mMainNode->setPosition(position);
 
 return ;
  }

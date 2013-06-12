@@ -29,6 +29,8 @@
 #include <string>
 #include <iostream>
 
+#include "physics/physics.h"
+
 class yappsWindow : public Ogre::FrameListener, public Ogre::WindowEventListener, public OIS::KeyListener, public OIS::MouseListener, OgreBites::SdkTrayListener, public  Yapps::Listener
 {
 public:
@@ -38,6 +40,8 @@ public:
     virtual void go(void);
 
 protected:
+    physicsUniverse physics;
+
     virtual bool setup();
     virtual bool configure(void);
     virtual void chooseSceneManager(void);
