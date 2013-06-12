@@ -13,7 +13,7 @@ using namespace Yapps;
         btVector3 fallInertia(0,0,0);
         fallShape->calculateLocalInertia(mass,fallInertia);
         btRigidBody::btRigidBodyConstructionInfo fallRigidBodyCI(mass,fallMotionState,fallShape,fallInertia);
-        fallRigidBodyCI.m_restitution = 0.8;
+        fallRigidBodyCI.m_restitution = 1.0;
         fallRigidBodyCI.m_friction = 0.9;
 
 

@@ -6,7 +6,10 @@
 
 #include <btBulletDynamicsCommon.h>
 #include <list>
+
 #include <OgreQuaternion.h>
+#include <OgreEntity.h>
+
 #include <fstream>
 #include "../environment/ordinates.hpp"
 namespace Yapps
@@ -18,6 +21,8 @@ public:
     btCollisionShape* fallShape;
     btDefaultMotionState* fallMotionState ;
     btRigidBody* myBody;
+
+    void applyOgreShape(Ogre::Entity *entity);
 
     physicalEntity(Vec3 position);
     Vec3 toYVec3(){
@@ -57,7 +62,7 @@ public:
 
         dynamicsWorld = new btDiscreteDynamicsWorld(dispatcher,broadphase,solver,collisionConfiguration);
 
-        dynamicsWorld->setGravity(btVector3(0,-9.8,0));
+        dynamicsWorld->setGravity(btVector3(0,-50,0));
 
 
         groundShape = new btStaticPlaneShape(btVector3(0,1,0),1);

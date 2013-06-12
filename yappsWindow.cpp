@@ -304,6 +304,15 @@ bool yappsWindow::frameRenderingQueued(const Ogre::FrameEvent& evt)
 
 bool yappsWindow::keyPressed(const OIS::KeyEvent &arg)
 {
+    static int i = 0;
+        stringstream name;
+        name << "Objectopr" << i++;
+        Yapps::ControllableObject* TESTOBJEKT = new Yapps::Object(mSceneMgr, name.str(), "cube", Vec3( rand()%50 -25 ,1000,rand()%50 -25) );
+        yInputManager->subscribeFrames(TESTOBJEKT);
+        physics.dynamicsWorld->addRigidBody( dynamic_cast<Yapps::Object*>(TESTOBJEKT)->physicalMe->myBody );
+
+
+
     yInputManager->publishKeys(mKeyboard->getAsString(arg.key)); //***************** FANGEN DER KEYS
 
     if (mTrayMgr->isDialogVisible()) return true; // don't process any more keys if dialog is up
@@ -394,7 +403,7 @@ bool yappsWindow::keyPressed(const OIS::KeyEvent &arg)
         mShutDown = true;
     }
 
-    //mCameraMan->injectKeyDown(arg);
+    mCameraMan->injectKeyDown(arg);
     return true;
 }
 
@@ -471,11 +480,11 @@ void yappsWindow::createScene(void)
 
 
 
-    for (int i = 0; i < 500; i++ )
+    for (int i = 0; i < 1250; i++ )
     {
         stringstream name;
         name << "Objector" << i;
-        TESTOBJEKT = new Yapps::Object(mSceneMgr, name.str(), "cube", Vec3( rand()%10 -5 ,10+3.5*i,rand()%10 -5) );
+        TESTOBJEKT = new Yapps::Object(mSceneMgr, name.str(), "cube", Vec3( rand()%50 -25 ,5+3.5*i,rand()%50 -25) );
         yInputManager->subscribeFrames(TESTOBJEKT);
         physics.dynamicsWorld->addRigidBody( dynamic_cast<Yapps::Object*>(TESTOBJEKT)->physicalMe->myBody );
 
@@ -508,7 +517,7 @@ void yappsWindow::createScene(void)
         }*/
     StellarObject** MyObjects = MySystems[0]->GetObjects(n);
 
-    for (int i = 0; i < n; i++)
+    for (int i = 0; i < 0; i++)
     {
         stringstream name;
         name << "Object" << i;
