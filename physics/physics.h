@@ -6,6 +6,7 @@
 
 #include <btBulletDynamicsCommon.h>
 #include <list>
+#include <OgreQuaternion.h>
 #include <fstream>
 #include "../environment/ordinates.hpp"
 namespace Yapps
@@ -25,6 +26,11 @@ public:
     myBody->getMotionState()->getWorldTransform(trans);
     return Vec3(trans.getOrigin().getX(), trans.getOrigin().getY(), trans.getOrigin().getZ() );
     }
+    Ogre::Quaternion toQuat(){
+        btQuaternion orientation = myBody->getOrientation();
+    return Ogre::Quaternion( orientation.getX(),orientation.getY(),orientation.getZ() ,orientation.getW() );
+    }
+
 
 };
 
@@ -51,7 +57,7 @@ public:
 
         dynamicsWorld = new btDiscreteDynamicsWorld(dispatcher,broadphase,solver,collisionConfiguration);
 
-        dynamicsWorld->setGravity(btVector3(0,-5,0));
+        dynamicsWorld->setGravity(btVector3(0,-9.8,0));
 
 
         groundShape = new btStaticPlaneShape(btVector3(0,1,0),1);

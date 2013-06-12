@@ -4,16 +4,18 @@
 using namespace Yapps;
   physicalEntity::physicalEntity(Vec3 position)
     {
-        static int height = 3;
-        fallShape = new btSphereShape(3.0);
+
+        fallShape = new btBoxShape( btVector3(3,3,3) );
         fallMotionState =
             new btDefaultMotionState(btTransform(btQuaternion(0,0,0,1),btVector3(position.x, position.y, position.z)));
-        height +=3;
 
-        btScalar mass = 1;
+        btScalar mass = 10;
         btVector3 fallInertia(0,0,0);
         fallShape->calculateLocalInertia(mass,fallInertia);
         btRigidBody::btRigidBodyConstructionInfo fallRigidBodyCI(mass,fallMotionState,fallShape,fallInertia);
+        fallRigidBodyCI.m_restitution = 0.8;
+        fallRigidBodyCI.m_friction = 0.9;
+
 
         myBody = new btRigidBody(fallRigidBodyCI);
     };

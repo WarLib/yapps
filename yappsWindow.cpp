@@ -20,20 +20,21 @@ This source file is part of the
 //-------------------------------------------------------------------------------------
 
 yappsWindow::yappsWindow(void)
-: mRoot(0),
-mCamera(0),
-mSceneMgr(0),
-mWindow(0),
-mResourcesCfg(Ogre::StringUtil::BLANK),
-mPluginsCfg(Ogre::StringUtil::BLANK),
-mTrayMgr(0),
-mCameraMan(0),
-mDetailsPanel(0),
-mCursorWasVisible(false),
-mShutDown(false),
-mInputManager(0),
-mMouse(0),
-mKeyboard(0) {
+    : mRoot(0),
+    mCamera(0),
+    mSceneMgr(0),
+    mWindow(0),
+    mResourcesCfg(Ogre::StringUtil::BLANK),
+    mPluginsCfg(Ogre::StringUtil::BLANK),
+    mTrayMgr(0),
+    mCameraMan(0),
+    mDetailsPanel(0),
+    mCursorWasVisible(false),
+    mShutDown(false),
+    mInputManager(0),
+    mMouse(0),
+    mKeyboard(0)
+{
     yInputManager = Yapps::Input::getInstance();
 
 
@@ -41,7 +42,8 @@ mKeyboard(0) {
 
 //-------------------------------------------------------------------------------------
 
-yappsWindow::~yappsWindow(void) {
+yappsWindow::~yappsWindow(void)
+{
     if (mTrayMgr) delete mTrayMgr;
     if (mCameraMan) delete mCameraMan;
 
@@ -53,43 +55,50 @@ yappsWindow::~yappsWindow(void) {
 
 //-------------------------------------------------------------------------------------
 
-bool yappsWindow::configure(void) {
+bool yappsWindow::configure(void)
+{
     // Show the configuration dialog and initialise the system
     // You can skip this and use root.restoreConfig() to load configuration
     // settings if you were sure there are valid ones saved in ogre.cfg
-    if (mRoot->showConfigDialog()) {
+    if (mRoot->showConfigDialog())
+    {
         // If returned true, user clicked OK so initialise
         // Here we choose to let the system create a default rendering window by passing 'true'
         mWindow = mRoot->initialise(true, "Yapps V0.01*E^-5 Alpha");
 
         return true;
-    } else {
+    }
+    else
+    {
         return false;
     }
 }
 //-------------------------------------------------------------------------------------
 
-void yappsWindow::chooseSceneManager(void) {
+void yappsWindow::chooseSceneManager(void)
+{
     // Get the SceneManager, in this case a generic one
     mSceneMgr = mRoot->createSceneManager(Ogre::ST_GENERIC);
 }
 //-------------------------------------------------------------------------------------
 
-void yappsWindow::createCamera(void) {
+void yappsWindow::createCamera(void)
+{
     // Create the camera
     mCamera = mSceneMgr->createCamera("PlayerCam");
 
     // Position it at 500 in Z direction
-    mCamera->setPosition(Ogre::Vector3(0, 0, 80));
+    mCamera->setPosition(Ogre::Vector3(0, 1000, 1000));
     // Look back along -Z
-    mCamera->lookAt(Ogre::Vector3(0, 0, -300));
+    mCamera->lookAt(Ogre::Vector3(0, 0, 0));
     mCamera->setNearClipDistance(5);
 
     mCameraMan = new OgreBites::SdkCameraMan(mCamera); // create a default camera controller
 }
 //-------------------------------------------------------------------------------------
 
-void yappsWindow::createFrameListener(void) {
+void yappsWindow::createFrameListener(void)
+{
     Ogre::LogManager::getSingletonPtr()->logMessage("*** Initializing OIS ***");
     OIS::ParamList pl;
     size_t windowHnd = 0;
@@ -141,22 +150,25 @@ void yappsWindow::createFrameListener(void) {
 }
 //-------------------------------------------------------------------------------------
 
-void yappsWindow::destroyScene(void) {
+void yappsWindow::destroyScene(void)
+{
 }
 //-------------------------------------------------------------------------------------
 
-void yappsWindow::createViewports(void) {
+void yappsWindow::createViewports(void)
+{
     // Create one viewport, entire window
     Ogre::Viewport* vp = mWindow->addViewport(mCamera);
     vp->setBackgroundColour(Ogre::ColourValue(0, 0, 0));
 
     // Alter the camera aspect ratio to match the viewport
     mCamera->setAspectRatio(
-            Ogre::Real(vp->getActualWidth()) / Ogre::Real(vp->getActualHeight()));
+        Ogre::Real(vp->getActualWidth()) / Ogre::Real(vp->getActualHeight()));
 }
 //-------------------------------------------------------------------------------------
 
-void yappsWindow::setupResources(void) {
+void yappsWindow::setupResources(void)
+{
     // Load resource paths from config file
     Ogre::ConfigFile cf;
     cf.load(mResourcesCfg);
@@ -165,31 +177,36 @@ void yappsWindow::setupResources(void) {
     Ogre::ConfigFile::SectionIterator seci = cf.getSectionIterator();
 
     Ogre::String secName, typeName, archName;
-    while (seci.hasMoreElements()) {
+    while (seci.hasMoreElements())
+    {
         secName = seci.peekNextKey();
         Ogre::ConfigFile::SettingsMultiMap *settings = seci.getNext();
         Ogre::ConfigFile::SettingsMultiMap::iterator i;
-        for (i = settings->begin(); i != settings->end(); ++i) {
+        for (i = settings->begin(); i != settings->end(); ++i)
+        {
             typeName = i->first;
             archName = i->second;
             Ogre::ResourceGroupManager::getSingleton().addResourceLocation(
-                    archName, typeName, secName);
+                archName, typeName, secName);
         }
     }
 }
 //-------------------------------------------------------------------------------------
 
-void yappsWindow::createResourceListener(void) {
+void yappsWindow::createResourceListener(void)
+{
 
 }
 //-------------------------------------------------------------------------------------
 
-void yappsWindow::loadResources(void) {
+void yappsWindow::loadResources(void)
+{
     Ogre::ResourceGroupManager::getSingleton().initialiseAllResourceGroups();
 }
 //-------------------------------------------------------------------------------------
 
-void yappsWindow::go(void) {
+void yappsWindow::go(void)
+{
 
 #if OGRE_PLATFORM == OGRE_PLATFORM_WIN32
 #ifdef _DEBUG
@@ -219,7 +236,8 @@ void yappsWindow::go(void) {
 }
 //-------------------------------------------------------------------------------------
 
-bool yappsWindow::setup(void) {
+bool yappsWindow::setup(void)
+{
     mRoot = new Ogre::Root(mPluginsCfg);
 
     setupResources();
@@ -248,7 +266,8 @@ bool yappsWindow::setup(void) {
 };
 //-------------------------------------------------------------------------------------
 
-bool yappsWindow::frameRenderingQueued(const Ogre::FrameEvent& evt) {
+bool yappsWindow::frameRenderingQueued(const Ogre::FrameEvent& evt)
+{
     if (mWindow->isClosed())
         return false;
 
@@ -261,7 +280,8 @@ bool yappsWindow::frameRenderingQueued(const Ogre::FrameEvent& evt) {
 
     mTrayMgr->frameRenderingQueued(evt);
 
-    if (!mTrayMgr->isDialogVisible()) {
+    if (!mTrayMgr->isDialogVisible())
+    {
         mCameraMan->frameRenderingQueued(evt); // if dialog isn't up, then update the camera
         if (mDetailsPanel->isVisible()) // if details panel is visible, then update its contents
         {
@@ -282,7 +302,8 @@ bool yappsWindow::frameRenderingQueued(const Ogre::FrameEvent& evt) {
 }
 //-------------------------------------------------------------------------------------
 
-bool yappsWindow::keyPressed(const OIS::KeyEvent &arg) {
+bool yappsWindow::keyPressed(const OIS::KeyEvent &arg)
+{
     yInputManager->publishKeys(mKeyboard->getAsString(arg.key)); //***************** FANGEN DER KEYS
 
     if (mTrayMgr->isDialogVisible()) return true; // don't process any more keys if dialog is up
@@ -290,74 +311,86 @@ bool yappsWindow::keyPressed(const OIS::KeyEvent &arg) {
     if (arg.key == OIS::KC_F) // toggle visibility of advanced frame stats
     {
         mTrayMgr->toggleAdvancedFrameStats();
-    } else if (arg.key == OIS::KC_G) // toggle visibility of even rarer debugging details
+    }
+    else if (arg.key == OIS::KC_G)   // toggle visibility of even rarer debugging details
     {
-        if (mDetailsPanel->getTrayLocation() == OgreBites::TL_NONE) {
+        if (mDetailsPanel->getTrayLocation() == OgreBites::TL_NONE)
+        {
             mTrayMgr->moveWidgetToTray(mDetailsPanel, OgreBites::TL_TOPRIGHT, 0);
             mDetailsPanel->show();
-        } else {
+        }
+        else
+        {
             mTrayMgr->removeWidgetFromTray(mDetailsPanel);
             mDetailsPanel->hide();
         }
-    } else if (arg.key == OIS::KC_T) // cycle polygon rendering mode
+    }
+    else if (arg.key == OIS::KC_T)   // cycle polygon rendering mode
     {
         Ogre::String newVal;
         Ogre::TextureFilterOptions tfo;
         unsigned int aniso;
 
-        switch (mDetailsPanel->getParamValue(9).asUTF8()[0]) {
-            case 'B':
-                newVal = "Trilinear";
-                tfo = Ogre::TFO_TRILINEAR;
-                aniso = 1;
-                break;
-            case 'T':
-                newVal = "Anisotropic";
-                tfo = Ogre::TFO_ANISOTROPIC;
-                aniso = 8;
-                break;
-            case 'A':
-                newVal = "None";
-                tfo = Ogre::TFO_NONE;
-                aniso = 1;
-                break;
-            default:
-                newVal = "Bilinear";
-                tfo = Ogre::TFO_BILINEAR;
-                aniso = 1;
+        switch (mDetailsPanel->getParamValue(9).asUTF8()[0])
+        {
+        case 'B':
+            newVal = "Trilinear";
+            tfo = Ogre::TFO_TRILINEAR;
+            aniso = 1;
+            break;
+        case 'T':
+            newVal = "Anisotropic";
+            tfo = Ogre::TFO_ANISOTROPIC;
+            aniso = 8;
+            break;
+        case 'A':
+            newVal = "None";
+            tfo = Ogre::TFO_NONE;
+            aniso = 1;
+            break;
+        default:
+            newVal = "Bilinear";
+            tfo = Ogre::TFO_BILINEAR;
+            aniso = 1;
         }
 
         Ogre::MaterialManager::getSingleton().setDefaultTextureFiltering(tfo);
         Ogre::MaterialManager::getSingleton().setDefaultAnisotropy(aniso);
         mDetailsPanel->setParamValue(9, newVal);
-    } else if (arg.key == OIS::KC_R) // cycle polygon rendering mode
+    }
+    else if (arg.key == OIS::KC_R)   // cycle polygon rendering mode
     {
         Ogre::String newVal;
         Ogre::PolygonMode pm;
 
-        switch (mCamera->getPolygonMode()) {
-            case Ogre::PM_SOLID:
-                newVal = "Wireframe";
-                pm = Ogre::PM_WIREFRAME;
-                break;
-            case Ogre::PM_WIREFRAME:
-                newVal = "Points";
-                pm = Ogre::PM_POINTS;
-                break;
-            default:
-                newVal = "Solid";
-                pm = Ogre::PM_SOLID;
+        switch (mCamera->getPolygonMode())
+        {
+        case Ogre::PM_SOLID:
+            newVal = "Wireframe";
+            pm = Ogre::PM_WIREFRAME;
+            break;
+        case Ogre::PM_WIREFRAME:
+            newVal = "Points";
+            pm = Ogre::PM_POINTS;
+            break;
+        default:
+            newVal = "Solid";
+            pm = Ogre::PM_SOLID;
         }
 
         mCamera->setPolygonMode(pm);
         mDetailsPanel->setParamValue(10, newVal);
-    } else if (arg.key == OIS::KC_F5) // refresh all textures
+    }
+    else if (arg.key == OIS::KC_F5)   // refresh all textures
     {
         Ogre::TextureManager::getSingleton().reloadAll();
-    } else if (arg.key == OIS::KC_SYSRQ) // take a screenshot
+    }
+    else if (arg.key == OIS::KC_SYSRQ)   // take a screenshot
     {
         mWindow->writeContentsToTimestampedFile("screenshot", ".jpg");
-    } else if (arg.key == OIS::KC_ESCAPE) {
+    }
+    else if (arg.key == OIS::KC_ESCAPE)
+    {
         mShutDown = true;
     }
 
@@ -365,24 +398,28 @@ bool yappsWindow::keyPressed(const OIS::KeyEvent &arg) {
     return true;
 }
 
-bool yappsWindow::keyReleased(const OIS::KeyEvent &arg) {
+bool yappsWindow::keyReleased(const OIS::KeyEvent &arg)
+{
     mCameraMan->injectKeyUp(arg);
     return true;
 }
 
-bool yappsWindow::mouseMoved(const OIS::MouseEvent &arg) {
+bool yappsWindow::mouseMoved(const OIS::MouseEvent &arg)
+{
     if (mTrayMgr->injectMouseMove(arg)) return true;
     mCameraMan->injectMouseMove(arg);
     return true;
 }
 
-bool yappsWindow::mousePressed(const OIS::MouseEvent &arg, OIS::MouseButtonID id) {
+bool yappsWindow::mousePressed(const OIS::MouseEvent &arg, OIS::MouseButtonID id)
+{
     if (mTrayMgr->injectMouseDown(arg, id)) return true;
     mCameraMan->injectMouseDown(arg, id);
     return true;
 }
 
-bool yappsWindow::mouseReleased(const OIS::MouseEvent &arg, OIS::MouseButtonID id) {
+bool yappsWindow::mouseReleased(const OIS::MouseEvent &arg, OIS::MouseButtonID id)
+{
     if (mTrayMgr->injectMouseUp(arg, id)) return true;
     mCameraMan->injectMouseUp(arg, id);
     return true;
@@ -390,7 +427,8 @@ bool yappsWindow::mouseReleased(const OIS::MouseEvent &arg, OIS::MouseButtonID i
 
 //Adjust mouse clipping area
 
-void yappsWindow::windowResized(Ogre::RenderWindow* rw) {
+void yappsWindow::windowResized(Ogre::RenderWindow* rw)
+{
     unsigned int width, height, depth;
     int left, top;
     rw->getMetrics(width, height, depth, left, top);
@@ -402,10 +440,13 @@ void yappsWindow::windowResized(Ogre::RenderWindow* rw) {
 
 //Unattach OIS before window shutdown (very important under Linux)
 
-void yappsWindow::windowClosed(Ogre::RenderWindow* rw) {
+void yappsWindow::windowClosed(Ogre::RenderWindow* rw)
+{
     //Only close for window that created OIS (the main window in these demos)
-    if (rw == mWindow) {
-        if (mInputManager) {
+    if (rw == mWindow)
+    {
+        if (mInputManager)
+        {
             mInputManager->destroyInputObject(mMouse);
             mInputManager->destroyInputObject(mKeyboard);
 
@@ -415,7 +456,8 @@ void yappsWindow::windowClosed(Ogre::RenderWindow* rw) {
     }
 }
 
-void yappsWindow::createScene(void) {
+void yappsWindow::createScene(void)
+{
     int n = 1000;
     string seed = "magicrootseed";
     mSceneMgr->setAmbientLight(Ogre::ColourValue(0.5f, 0.5f, 0.5f));
@@ -428,9 +470,19 @@ void yappsWindow::createScene(void) {
     physics.dynamicsWorld->addRigidBody( dynamic_cast<Yapps::Object*>(TESTOBJEKT)->physicalMe->myBody );
 
 
-    TESTOBJEKT = new Yapps::Object(mSceneMgr, "SomethingElse", "yappsShip", Vec3(0,10,0) );
-    yInputManager->subscribeFrames(TESTOBJEKT);
-    physics.dynamicsWorld->addRigidBody( dynamic_cast<Yapps::Object*>(TESTOBJEKT)->physicalMe->myBody );
+
+    for (int i = 0; i < 500; i++ )
+    {
+        stringstream name;
+        name << "Objector" << i;
+        TESTOBJEKT = new Yapps::Object(mSceneMgr, name.str(), "cube", Vec3( rand()%10 -5 ,10+3.5*i,rand()%10 -5) );
+        yInputManager->subscribeFrames(TESTOBJEKT);
+        physics.dynamicsWorld->addRigidBody( dynamic_cast<Yapps::Object*>(TESTOBJEKT)->physicalMe->myBody );
+
+
+        //dynamic_cast<Yapps::Object*>(TESTOBJEKT)->physicalMe->myBody->applyImpulse( btVector3(0,0,200), btVector3(0,0,0) );
+    }
+
 
 
     //TESTOBJEKT = new Yapps::Object(mSceneMgr, "Something", "yappsShip", Vec3(0,12,0));
@@ -456,7 +508,8 @@ void yappsWindow::createScene(void) {
         }*/
     StellarObject** MyObjects = MySystems[0]->GetObjects(n);
 
-    for (int i = 0; i < n; i++) {
+    for (int i = 0; i < n; i++)
+    {
         stringstream name;
         name << "Object" << i;
         StellarObject & thisObject(*(MyObjects[i]));
@@ -468,7 +521,8 @@ void yappsWindow::createScene(void) {
         SystemNode->attachObject(System);
 
         cout << name.str() << " at " << thisObject.GetCenter()*500 << endl;
-        if (i == 0) {
+        if (i == 0)
+        {
             Ogre::ParticleSystem* sunParticle = mSceneMgr->createParticleSystem("Sun", "Space/Sun");
             Ogre::SceneNode* particleNode = SystemNode->createChildSceneNode("Particle");
             particleNode->attachObject(sunParticle);
@@ -502,7 +556,8 @@ void yappsWindow::createScene(void) {
 extern "C" {
 #endif
 
-    int main(int argc, char *argv[]) {
+    int main(int argc, char *argv[])
+    {
         // Create application object
         /*Yapps::Vec3 MyVec(0,0,0,1,1,1);
                 Yapps::grid_vec adjectant[26];
@@ -512,14 +567,17 @@ extern "C" {
                 }
          */
         yappsWindow app;
-        try {
+        try
+        {
             app.go();
-        } catch (Ogre::Exception& e) {
+        }
+        catch (Ogre::Exception& e)
+        {
 #if OGRE_PLATFORM == OGRE_PLATFORM_WIN32
             MessageBox(NULL, e.getFullDescription().c_str(), "An exception has occured!", MB_OK | MB_ICONERROR | MB_TASKMODAL);
 #else
             std::cerr << "An exception has occured: " <<
-                    e.getFullDescription().c_str() << std::endl;
+                      e.getFullDescription().c_str() << std::endl;
 #endif
         }
 
