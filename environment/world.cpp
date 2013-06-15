@@ -199,23 +199,24 @@ void System::Init(void) {
     for (int i = 1; i < _n_objects; i++) {
         int type_t = _parent->rand_gen.random(0, 30000);
         int type = 30000 / type_t;
+		Vec3 thisvec(*points_it++);
         cout << type << endl;
         switch (type) {
             case 0:
                 cout << "new asteroid" << endl;
-                _objects[i] = new Asteroid((*points_it++), Ogre::Vector3(0, 0, 0));
+                _objects[i] = new Asteroid((thisvec*500.0), Ogre::Vector3(0, 0, 0));
                 break;
             case 1:
                 cout << "new planet" << endl;
-                _objects[i] = new Planet((*points_it++), Ogre::Vector3(0, 0, 0));
+                _objects[i] = new Planet((thisvec*500.0), Ogre::Vector3(0, 0, 0));
                 break;
             case 2:
                 cout << "new giant" << endl;
-                _objects[i] = new Giant((*points_it++), Ogre::Vector3(0, 0, 0));
+                _objects[i] = new Giant((thisvec*500.0), Ogre::Vector3(0, 0, 0));
                 break;
             default:
-                cout << "new planet" << endl;
-                _objects[i] = new Planet((*points_it++), Ogre::Vector3(0, 0, 0));
+                cout << "new asteroid" << endl;
+                _objects[i] = new Asteroid((thisvec*500.0), Ogre::Vector3(0, 0, 0));
                 break;
 
         }

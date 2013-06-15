@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<GUILayout>
+	<Window Type="DefaultWindow" name="root">
+        <Property Name="InheritsAlpha" Value="True" />
+		<Property Name="UnifiedMaxSize" Value="{{1,0},{1,0}}" />
+        <Property Name="UnifiedAreaRect" Value="{{0,0},{0,0},{1,0},{1,0}}" />
+		<Window Type="Yapps/FrameWindow" Name="TextDemo" >
+			<Property Name="Text" Value="Text sample" />
+			<Property Name="UnifiedMaxSize" Value="{{1,0},{1,0}}" />
+			<Property Name="TitlebarEnabled" Value="False" />
+			<Property Name="UnifiedAreaRect" Value="{{0,0},{0,0},{1,0},{1,0}}" />
+	</Window>
+</GUILayout>

@@ -8,13 +8,14 @@ using namespace std;
 #endif
 
 StellarObject::StellarObject(Vec3 center, Ogre::Vector3 rot, double colonization) {
+	_mesh = "sphere.mesh";
     _center = center;
     _rot = rot;
     _colonization = colonization;
     mConfigFile = "stellar.cfg";
 }
 
-const Vec3& StellarObject::GetCenter(void) const {
+Vec3& StellarObject::GetCenter(void){
     return _center;
 }
 
@@ -62,4 +63,8 @@ void StellarObject::ReadCfg(const Ogre::String& type, double& den, double& mass)
             }
         }
     }
+}
+
+Ogre::String StellarObject::GetMeshName(void) {
+	return _mesh;
 }

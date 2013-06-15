@@ -1,0 +1,9 @@
+<?xml version="1.0" ?>
+<GUIScheme Name="Yapps">
+	<Imageset Filename="Yapps.imageset" />
+	<Font Filename="DejaVuSans-10.font" />
+	<LookNFeel Filename="Yapps.looknfeel" />
+	<WindowRendererSet Filename="CEGUIFalagardWRBase" />
+	<FalagardMapping WindowType="Yapps/FrameWindow"  TargetType="CEGUI/FrameWindow" Renderer="Falagard/FrameWindow"  LookNFeel="Yapps/FrameWindow" />
+	<FalagardMapping WindowType="Yapps/StaticImage" TargetType="DefaultWindow" Renderer="Falagard/StaticImage" LookNFeel="Yapps/StaticImage" />
+</GUIScheme>

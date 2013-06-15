@@ -21,9 +21,6 @@
 #include <SdkTrays.h>
 #include <SdkCameraMan.h>
 
-#include <RendererModules/Ogre/CEGUIOgreRenderer.h>
-#include <CEGUI.h>
-
 #include "environment/world.hpp"
 #include "entity/Object.h"
 #include "input/Input.h"
@@ -31,6 +28,8 @@
 #include <sstream>
 #include <string>
 #include <iostream>
+
+#include "ui.hpp"
 
 class yappsWindow : public Ogre::FrameListener, public Ogre::WindowEventListener, public OIS::KeyListener, public OIS::MouseListener, OgreBites::SdkTrayListener, public  Yapps::Listener
 {
@@ -70,9 +69,7 @@ protected:
     //Unattach OIS before window shutdown (very important under Linux)
     virtual void windowClosed(Ogre::RenderWindow* rw);
 
-	CEGUI::OgreRenderer* mRenderer;
-
-    Ogre::Root *mRoot;
+	Ogre::Root *mRoot;
     Ogre::Camera* mCamera;
     Ogre::SceneManager* mSceneMgr;
     Ogre::RenderWindow* mWindow;

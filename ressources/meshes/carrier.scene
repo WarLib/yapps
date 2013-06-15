@@ -1,0 +1,71 @@
+<scene export_time="1371131016.864191" exported_by="Tristan" previous_export_time="0" formatVersion="1.0.1" >
+  <nodes >
+    <node name="Point" >
+      <position y="-23.743927" x="-234.479568" z="-108.241890" />
+      <rotation qw="1.000000" qz="-0.000000" qy="0.000000" qx="0.000000" />
+      <scale y="1.000000" x="1.000000" z="1.000000" />
+      <game >
+        <sensors />
+        <actuators />
+      </game>
+      <light powerScale="9.019999504089355" type="point" name="Point" >
+        <position y="-23.743927" x="-234.479568" z="-108.241890" />
+        <lightAttenuation quadratic="0.0" constant="1.0" range="5000" linear="0.04" />
+        <colourDiffuse b="1.0" r="1.0" g="1.0" />
+        <colourSpecular b="1.0" r="1.0" g="1.0" />
+      </light>
+    </node>
+    <node name="Camera" >
+      <position y="769.785095" x="-1976.418579" z="1729.405396" />
+      <rotation qw="0.720087" qz="0.269627" qy="-0.374867" qx="0.517929" />
+      <scale y="49.999996" x="50.000000" z="50.000000" />
+      <game >
+        <sensors />
+        <actuators />
+      </game>
+      <camera projectionType="perspective" fov="0.47828779979622077" name="Camera" >
+        <clipping near="0.10000000149011612" far="10000.0" nearPlaneDist="0.10000000149011612" farPlaneDist="10000.0" />
+      </camera>
+    </node>
+    <node name="Point.001" >
+      <position y="2004.419922" x="-1284.918335" z="-1008.079590" />
+      <rotation qw="0.947386" qz="0.263425" qy="-0.126418" qx="-0.130714" />
+      <scale y="1.000000" x="1.000000" z="1.000000" />
+      <game >
+        <sensors />
+        <actuators />
+      </game>
+      <light powerScale="0.64000004529953" shadow="true" type="directional" name="Point.001" >
+        <position y="2004.419922" x="-1284.918335" z="-1008.079590" />
+        <lightAttenuation quadratic="0.0" constant="1.0" range="5000" linear="0.00269576659834287" />
+        <direction y="-0.827" x="-0.532" z="-0.181" />
+        <colourDiffuse b="1.0" r="1.0" g="1.0" />
+        <colourSpecular b="1.0" r="1.0" g="1.0" />
+        <colourShadow b="1.0" r="1.0" g="1.0" />
+      </light>
+    </node>
+    <node name="Cube" >
+      <position y="0.000000" x="0.000000" z="-0.000000" />
+      <rotation qw="1.000000" qz="-0.000000" qy="0.000000" qx="0.000000" />
+      <scale y="1.000000" x="1.000000" z="1.000000" />
+      <game >
+        <sensors />
+        <actuators />
+      </game>
+      <entity mass_radius="1.0" velocity_min="0.0" damping_rot="0.1589999943971634" velocity_max="0.0" damping_trans="0.02539999969303608" lock_rot_z="False" lock_rot_x="False" lock_rot_y="False" ghost="False" physics_type="STATIC" anisotropic_friction="False" meshFile="Cube.mesh" name="Cube" friction_z="1.0" friction_y="1.0" friction_x="1.0" mass="1.0" actor="False" lock_trans_y="False" lock_trans_x="False" inertia_tensor="0.4000000059604645" lock_trans_z="False" />
+    </node>
+  </nodes>
+  <externals >
+    <item type="material" >
+      <file name="D:\dev\yapps\ressources\meshes\Material.material" />
+    </item>
+    <item type="material" >
+      <file name="D:\dev\yapps\ressources\meshes\Material.028.material" />
+    </item>
+  </externals>
+  <environment >
+    <colourAmbient b="0.0" r="0.0" g="0.0" />
+    <colourBackground b="0.05087608844041824" r="0.05087608844041824" g="0.05087608844041824" />
+    <colourDiffuse b="0.05087608844041824" r="0.05087608844041824" g="0.05087608844041824" />
+  </environment>
+</scene>

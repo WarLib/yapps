@@ -24,6 +24,7 @@ namespace Yapps {
         void gridify(void);
     public:
         Vec3();
+		Vec3(const Vec3& orig);
         Vec3(const Ogre::Real fX, const Ogre::Real fY, const Ogre::Real fZ);
         Vec3(const lint gX, const lint gY, const lint gZ, const Ogre::Real fX, const Ogre::Real fY, const Ogre::Real fZ);
         Vec3(const lint agCoordinate[3], const Ogre::Real afCoordinate[3]);
@@ -43,10 +44,14 @@ namespace Yapps {
         Vec3 operator -(const grid_vec & vgl) const;
 
         void operator *=(double val);
-        void operator *=(Vec3 val);
-
+        Vec3 operator *(double val);
+        
+		void operator *=(Vec3 val);
+		Vec3 operator *(Vec3 val);
+        
 
         Vec3 & operator =(const Vec3& vgl);
+		Vec3 & operator =(const Ogre::Vector3& vgl);
 
         bool operator ==(const Vec3& vgl) const;
         bool operator !=(const Vec3& vgl) const;

@@ -18,22 +18,16 @@ http://www.ogre3d.org/tikiwiki/
 #include <OgreParticleSystem.h>
 
 //-------------------------------------------------------------------------------------
-CEGUI::MouseButton convertButton(OIS::MouseButtonID buttonID)
-{
-	switch (buttonID)
-	{
-	case OIS::MB_Left:
-		return CEGUI::LeftButton;
 
-	case OIS::MB_Right:
-		return CEGUI::RightButton;
+//tmp global campos
+double res_x = 0, res_y = 0, res_z = 0;
 
-	case OIS::MB_Middle:
-		return CEGUI::MiddleButton;
 
-	default:
-		return CEGUI::LeftButton;
-	}
+double DiffBetrag(double a, double b) {
+	double tmp = a - b;
+	if (tmp < 0)
+		return -tmp;
+	return tmp;
 }
 
 //-------------------------------------------------------------------------------------
@@ -96,12 +90,18 @@ void yappsWindow::createCamera(void) {
 	mCamera = mSceneMgr->createCamera("PlayerCam");
 
 	// Position it at 500 in Z direction
-	mCamera->setPosition(Ogre::Vector3(0, 0, 80));
+//	mCamera->setPosition(Ogre::Vector3(0, 0, 80));
+	mCamera->setPosition(Ogre::Vector3(-6636.61, 12.1833, 118330));
 	// Look back along -Z
 	mCamera->lookAt(Ogre::Vector3(0, 0, -300));
-	mCamera->setNearClipDistance(5);
-
+	mCamera->setNearClipDistance(1);
+	mCamera->setFarClipDistance(800000000000);
+//	mCamera->setOrientationMode(Ogre::OR_PORTRAIT);
 	mCameraMan = new OgreBites::SdkCameraMan(mCamera); // create a default camera controller
+	
+	FlightUI* ThisUi = FlightUI::getSingleton();
+	ThisUi->Init(mCamera);
+
 }
 //-------------------------------------------------------------------------------------
 
@@ -129,13 +129,6 @@ void yappsWindow::createFrameListener(void) {
 	//Register as a Window listener
 	Ogre::WindowEventUtilities::addWindowEventListener(mWindow, this);
 
-	// ---------------- GUI TEST -----------------
-	//mTrayMgr = new OgreBites::SdkTrayManager("InterfaceName", mWindow, mMouse, this);
-	//mTrayMgr->showFrameStats(OgreBites::TL_BOTTOMLEFT);
-	//mTrayMgr->showLogo(OgreBites::TL_BOTTOMRIGHT);
-	//mTrayMgr->hideCursor();
-	// ---------------- GUI TEST -----------------
-
 	// create a params panel for displaying sample details
 	Ogre::StringVector items;
 	items.push_back("cam.pX");
@@ -150,11 +143,6 @@ void yappsWindow::createFrameListener(void) {
 	items.push_back("Filtering");
 	items.push_back("Poly Mode");
 
-	/*	mDetailsPanel = mTrayMgr->createParamsPanel(OgreBites::TL_NONE, "DetailsPanel", 200, items);
-	mDetailsPanel->setParamValue(9, "Bilinear");
-	mDetailsPanel->setParamValue(10, "Solid");
-	mDetailsPanel->hide();
-	*/
 	mRoot->addFrameListener(this);
 }
 //-------------------------------------------------------------------------------------
@@ -226,7 +214,6 @@ void yappsWindow::go(void) {
 	mPluginsCfg = "ressources/etc/plugins.cfg";
 #endif
 #endif
-        cout << "!!!!USING CONFIG: " << mResourcesCfg << " !!!!!!!!!!!!!!!!!!" << endl;
 
 	if (!setup())
 		return;
@@ -268,6 +255,8 @@ bool yappsWindow::setup(void) {
 //-------------------------------------------------------------------------------------
 
 bool yappsWindow::frameRenderingQueued(const Ogre::FrameEvent& evt) {
+	double tmp_x, tmp_y, tmp_z; 
+	static const double thresh = 100;
 	if (mWindow->isClosed())
 		return false;
 
@@ -280,25 +269,23 @@ bool yappsWindow::frameRenderingQueued(const Ogre::FrameEvent& evt) {
 
 
 	// -------------- GUI TEST -----------------
-	/*mTrayMgr->frameRenderingQueued(evt);
-
-	if (!mTrayMgr->isDialogVisible()) {
-	if (mDetailsPanel->isVisible()) // if details panel is visible, then update its contents
-	{
-	mDetailsPanel->setParamValue(0, Ogre::StringConverter::toString(mCamera->getDerivedPosition().x));
-	mDetailsPanel->setParamValue(1, Ogre::StringConverter::toString(mCamera->getDerivedPosition().y));
-	mDetailsPanel->setParamValue(2, Ogre::StringConverter::toString(mCamera->getDerivedPosition().z));
-	mDetailsPanel->setParamValue(4, Ogre::StringConverter::toString(mCamera->getDerivedOrientation().w));
-	mDetailsPanel->setParamValue(5, Ogre::StringConverter::toString(mCamera->getDerivedOrientation().x));
-	mDetailsPanel->setParamValue(6, Ogre::StringConverter::toString(mCamera->getDerivedOrientation().y));
-	mDetailsPanel->setParamValue(7, Ogre::StringConverter::toString(mCamera->getDerivedOrientation().z));
-	}
-	}
-	*/
 	mCameraMan->frameRenderingQueued(evt); // if dialog isn't up, then update the camera
 
-	CEGUI::System::getSingleton().injectTimePulse(evt.timeSinceLastFrame);
+	tmp_x = mCameraMan->getCamera()->getDerivedPosition().x;
+	tmp_y = mCameraMan->getCamera()->getDerivedPosition().y;
+	tmp_z = mCameraMan->getCamera()->getDerivedPosition().z;
+
+	if (DiffBetrag(res_x,tmp_x) > thresh || DiffBetrag(res_y,tmp_y) > thresh ||DiffBetrag(res_z,tmp_z) > thresh) {
+		cout << "Camera pos: " << mCameraMan->getCamera()->getDerivedPosition() << endl;
+		res_x = tmp_x;
+		res_y = tmp_y;
+		res_z = tmp_z;
+	}
+
+	//	CEGUI::System::getSingleton().injectTimePulse(evt.timeSinceLastFrame);
 	// -------------- GUI TEST -----------------
+
+	Ui::GetActiveUi()->update(evt.timeSinceLastFrame);
 	return true;
 }
 //-------------------------------------------------------------------------------------
@@ -306,72 +293,14 @@ bool yappsWindow::frameRenderingQueued(const Ogre::FrameEvent& evt) {
 bool yappsWindow::keyPressed(const OIS::KeyEvent &arg) {
 	yInputManager->publish(mKeyboard->getAsString(arg.key)); //***************** FANGEN DER KEYS
 
-	//	if (mTrayMgr->isDialogVisible()) return true; // don't process any more keys if dialog is up
-
 	if (arg.key == OIS::KC_F) // toggle visibility of advanced frame stats
 	{
-		//		mTrayMgr->toggleAdvancedFrameStats();
 	} else if (arg.key == OIS::KC_G) // toggle visibility of even rarer debugging details
 	{
-		/*	if (mDetailsPanel->getTrayLocation() == OgreBites::TL_NONE) {
-		mTrayMgr->moveWidgetToTray(mDetailsPanel, OgreBites::TL_TOPRIGHT, 0);
-		mDetailsPanel->show();
-		} else {
-		mTrayMgr->removeWidgetFromTray(mDetailsPanel);
-		mDetailsPanel->hide();
-		}*/
 	} else if (arg.key == OIS::KC_T) // cycle polygon rendering mode
 	{
-		/*	Ogre::String newVal;
-		Ogre::TextureFilterOptions tfo;
-		unsigned int aniso;
-
-		switch (mDetailsPanel->getParamValue(9).asUTF8()[0]) {
-		case 'B':
-		newVal = "Trilinear";
-		tfo = Ogre::TFO_TRILINEAR;
-		aniso = 1;
-		break;
-		case 'T':
-		newVal = "Anisotropic";
-		tfo = Ogre::TFO_ANISOTROPIC;
-		aniso = 8;
-		break;
-		case 'A':
-		newVal = "None";
-		tfo = Ogre::TFO_NONE;
-		aniso = 1;
-		break;
-		default:
-		newVal = "Bilinear";
-		tfo = Ogre::TFO_BILINEAR;
-		aniso = 1;
-		}
-
-		Ogre::MaterialManager::getSingleton().setDefaultTextureFiltering(tfo);
-		Ogre::MaterialManager::getSingleton().setDefaultAnisotropy(aniso);
-		mDetailsPanel->setParamValue(9, newVal);*/
 	} else if (arg.key == OIS::KC_R) // cycle polygon rendering mode
 	{
-		//Ogre::String newVal;
-		//Ogre::PolygonMode pm;
-
-		//switch (mCamera->getPolygonMode()) {
-		//case Ogre::PM_SOLID:
-		//	newVal = "Wireframe";
-		//	pm = Ogre::PM_WIREFRAME;
-		//	break;
-		//case Ogre::PM_WIREFRAME:
-		//	newVal = "Points";
-		//	pm = Ogre::PM_POINTS;
-		//	break;
-		//default:
-		//	newVal = "Solid";
-		//	pm = Ogre::PM_SOLID;
-		//}
-
-		//mCamera->setPolygonMode(pm);
-		//mDetailsPanel->setParamValue(10, newVal);
 	} else if (arg.key == OIS::KC_F5) // refresh all textures
 	{
 		Ogre::TextureManager::getSingleton().reloadAll();
@@ -381,25 +310,25 @@ bool yappsWindow::keyPressed(const OIS::KeyEvent &arg) {
 	} else if (arg.key == OIS::KC_ESCAPE) {
 		mShutDown = true;
 	}
-	CEGUI::System &sys = CEGUI::System::getSingleton();
-	sys.injectKeyDown(arg.key);
-	sys.injectChar(arg.text);
+	//	CEGUI::System &sys = CEGUI::System::getSingleton();
+	//	sys.injectKeyDown(arg.key);
+	//	sys.injectChar(arg.text);
 	mCameraMan->injectKeyDown(arg);
 	return true;
 }
 
 bool yappsWindow::keyReleased(const OIS::KeyEvent &arg) {
-	CEGUI::System::getSingleton().injectKeyUp(arg.key);
+	//CEGUI::System::getSingleton().injectKeyUp(arg.key);
 	mCameraMan->injectKeyUp(arg);
 	return true;
 }
 
 bool yappsWindow::mouseMoved(const OIS::MouseEvent &arg) {
-	CEGUI::System &sys = CEGUI::System::getSingleton();
-	sys.injectMouseMove(arg.state.X.rel, arg.state.Y.rel);
+	//CEGUI::System &sys = CEGUI::System::getSingleton();
+	//sys.injectMouseMove(arg.state.X.rel, arg.state.Y.rel);
 	// Scroll wheel.
-	if (arg.state.Z.rel)
-		sys.injectMouseWheelChange(arg.state.Z.rel / 120.0f);
+	//	if (arg.state.Z.rel)
+	//	sys.injectMouseWheelChange(arg.state.Z.rel / 120.0f);
 	//	if (mTrayMgr->injectMouseMove(arg)) return true;
 	mCameraMan->injectMouseMove(arg);
 	return true;
@@ -407,14 +336,14 @@ bool yappsWindow::mouseMoved(const OIS::MouseEvent &arg) {
 
 bool yappsWindow::mousePressed(const OIS::MouseEvent &arg, OIS::MouseButtonID id) {
 	//	if (mTrayMgr->injectMouseDown(arg, id)) return true;
-	CEGUI::System::getSingleton().injectMouseButtonDown(convertButton(id));
+	//CEGUI::System::getSingleton().injectMouseButtonDown(convertButton(id));
 	mCameraMan->injectMouseDown(arg, id);
 	return true;
 }
 
 bool yappsWindow::mouseReleased(const OIS::MouseEvent &arg, OIS::MouseButtonID id) {
 	//	if (mTrayMgr->injectMouseUp(arg, id)) return true;
-	CEGUI::System::getSingleton().injectMouseButtonUp(convertButton(id));
+	//CEGUI::System::getSingleton().injectMouseButtonUp(convertButton(id));
 	mCameraMan->injectMouseUp(arg, id);
 	return true;
 }
@@ -448,24 +377,21 @@ void yappsWindow::windowClosed(Ogre::RenderWindow* rw) {
 
 void yappsWindow::createScene(void) {
 	int n = 1000;
-	string seed = "magicrootseed";
-	mSceneMgr->setAmbientLight(Ogre::ColourValue(0.5f, 0.5f, 0.5f));
+	string seed = "asteroiddddsseed";
+	mSceneMgr->setShadowTechnique(Ogre::SHADOWTYPE_TEXTURE_MODULATIVE);
+	mSceneMgr->setAmbientLight(Ogre::ColourValue(0.2f, 0.2f, 0.2f));
 	mSceneMgr->setSkyBox(true, "MySky");
 
+	FlightUI* ThisUi = FlightUI::getSingleton();
 	// -------------- GUI TEST ----------------
-	mRenderer = &CEGUI::OgreRenderer::bootstrapSystem();
+	//mRenderer = &CEGUI::OgreRenderer::bootstrapSystem();
 
-	CEGUI::Imageset::setDefaultResourceGroup("Imagesets");
-	CEGUI::Font::setDefaultResourceGroup("Fonts");
-	CEGUI::Scheme::setDefaultResourceGroup("Schemes");
-	CEGUI::WidgetLookManager::setDefaultResourceGroup("LookNFeel");
-	CEGUI::WindowManager::setDefaultResourceGroup("Layouts");
 
-	CEGUI::SchemeManager::getSingleton().create("TaharezLook.scheme");
-	CEGUI::System::getSingleton().setDefaultMouseCursor("TaharezLook", "MouseArrow");
+	//CEGUI::SchemeManager::getSingleton().create("TaharezLook.scheme");
+	//CEGUI::System::getSingleton().setDefaultMouseCursor("TaharezLook", "MouseArrow");
 	// -------------- GUI TEST ----------------
 
-	Yapps::ControllableObject* TESTOBJEKT = new Yapps::Object(mSceneMgr, "Something", "yappsShip");
+	Yapps::ControllableObject* TESTOBJEKT = new Yapps::Object(mSceneMgr, "Something", "carrier");
 	yInputManager->subscribe(TESTOBJEKT);
 
 	Galaxy & MyGalaxy(Galaxy::GetGalaxy(n, 8, seed, true));
@@ -491,27 +417,48 @@ void yappsWindow::createScene(void) {
 		StellarObject & thisObject(*(MyObjects[i]));
 
 		//Ogre::SceneNode* particleNode = mSceneMgr->getRootSceneNode()->crSieateChildSceneNode(name.str(),Ogre::Vector3(thisSystem.GetCenter().GetOrdinates(X),thisSystem.GetCenter().GetOrdinates(Y),thisSystem.GetCenter().GetOrdinates(Z)));
-		Ogre::Entity* System = mSceneMgr->createEntity(name.str(), "sphere.mesh");
+		Ogre::Entity* System = mSceneMgr->createEntity(name.str(), thisObject.GetMeshName());
 		name << "node";
-		Ogre::SceneNode* SystemNode = mSceneMgr->getRootSceneNode()->createChildSceneNode(name.str(), Ogre::Vector3(thisObject.GetCenter()*500));
+		//thisObject.GetCenter() *= 500.0;
+		ThisUi->AddIndicator(thisObject);
+		Ogre::SceneNode* SystemNode = mSceneMgr->getRootSceneNode()->createChildSceneNode(name.str(), Ogre::Vector3(thisObject.GetCenter()));
 		SystemNode->attachObject(System);
 
-		cout << name.str() << " at " << thisObject.GetCenter()*500 << endl;
+		cout << name.str() << " at " << thisObject.GetCenter() << endl;
 		if (i == 0) {
 			Ogre::ParticleSystem* sunParticle = mSceneMgr->createParticleSystem("Sun", "Space/Sun");
 			Ogre::SceneNode* particleNode = SystemNode->createChildSceneNode("Particle");
 			particleNode->attachObject(sunParticle);
 		}
 
-		SystemNode->scale(thisObject.GetRadius()*0.5, thisObject.GetRadius()*0.5, thisObject.GetRadius()*0.5);
+		SystemNode->scale(thisObject.GetRadius(), thisObject.GetRadius(), thisObject.GetRadius());
 	}
 
 
 	//	Ogre::ManualObject* manual = mSceneMgr->createManualObject("manual");
 	//	manual->begin("BaseWhiteNoLighting", Ogre::RenderOperation::OT_POINT_LIST);
+	Ogre::Entity* LightBulb = mSceneMgr->createEntity("LightPos", "sphere.mesh");
 
-	Ogre::Light* light = mSceneMgr->createLight("MainLight");
-	light->setPosition(20.0f, 80.0f, 50.0f);
+	Ogre::SceneNode* Light1Node = mSceneMgr->getRootSceneNode()->createChildSceneNode("LightPosNode", Ogre::Vector3(-600.0f, 100.0f, 50.0f));
+	Light1Node->attachObject(LightBulb);
+	LightBulb->setCastShadows(false);
+	Light1Node->scale(Ogre::Vector3(0.1,0.1,0.1));
+
+	Ogre::Light* light1 = mSceneMgr->createLight("MainLight");
+	light1->setPosition(-600.0f, 100.0f, 50.0f);
+
+
+	Ogre::Entity* LightBulb2 = mSceneMgr->createEntity("LightPos2", "sphere.mesh");
+
+	Ogre::SceneNode* Light2Node = mSceneMgr->getRootSceneNode()->createChildSceneNode("LightPos2Node", Ogre::Vector3(-500.0f, 120.0f, -600.0f));
+	Light2Node->attachObject(LightBulb2);
+	LightBulb2->setCastShadows(false);
+	Light2Node->scale(Ogre::Vector3(0.1,0.1,0.1));
+
+	Ogre::Light* light2 = mSceneMgr->createLight("SecondLight");
+	light2->setPosition(-500.0f, 120.0f, -50.0f);
+
+	ThisUi->Show();
 
 }
 
