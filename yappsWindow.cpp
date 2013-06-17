@@ -88,7 +88,7 @@ void yappsWindow::createCamera(void)
     mCamera = mSceneMgr->createCamera("PlayerCam");
 
     // Position it at 500 in Z direction
-    mCamera->setPosition(Ogre::Vector3(0, 1000, 1000));
+    mCamera->setPosition(Ogre::Vector3(0, 3000, 3000));
     // Look back along -Z
     mCamera->lookAt(Ogre::Vector3(0, 0, 0));
     mCamera->setNearClipDistance(5);
@@ -296,7 +296,7 @@ bool yappsWindow::frameRenderingQueued(const Ogre::FrameEvent& evt)
     }
 
     std::cout << evt.timeSinceLastFrame << std::endl;
-    physics.dynamicsWorld->stepSimulation(evt.timeSinceLastFrame,10);
+    physics.dynamicsWorld->stepSimulation(evt.timeSinceLastFrame*10,10);
     yInputManager->publishFrame(evt.timeSinceLastFrame);
     return true;
 }
