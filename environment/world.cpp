@@ -4,6 +4,7 @@
 #include <vector>
 #include <algorithm>
 #include <cmath>
+#include <sstream>
 
 #ifdef TESTING_ENV
 #include <iostream>
@@ -173,7 +174,7 @@ void System::Init(void) {
     double theta = 360 / (double) (_n_objects - 1);
 
     _objects = new StellarObject*[_n_objects];
-    _objects[0] = new Star(center, Ogre::Vector3(0, 0.1, 0));
+    _objects[0] = new Star(center, Ogre::Vector3(0, 0.1, 0),"sun");
     next_jump = _objects[0]->GetRadius() * 5;
     next_jump_t = next_jump;
 
@@ -197,6 +198,8 @@ void System::Init(void) {
 
     points_it = points.begin();
     for (int i = 1; i < _n_objects; i++) {
+		stringstream name;
+		name << i;
         int type_t = _parent->rand_gen.random(0, 30000);
         int type = 30000 / type_t;
 		Vec3 thisvec(*points_it++);
@@ -204,19 +207,23 @@ void System::Init(void) {
         switch (type) {
             case 0:
                 cout << "new asteroid" << endl;
-                _objects[i] = new Asteroid((thisvec*500.0), Ogre::Vector3(0, 0, 0));
+				name << "_asteroid";
+                _objects[i] = new Asteroid((thisvec*500.0), Ogre::Vector3(0, 0, 0),name.str());
                 break;
             case 1:
                 cout << "new planet" << endl;
-                _objects[i] = new Planet((thisvec*500.0), Ogre::Vector3(0, 0, 0));
+				name << "_planet";
+                _objects[i] = new Planet((thisvec*500.0), Ogre::Vector3(0, 0, 0),name.str());
                 break;
             case 2:
                 cout << "new giant" << endl;
-                _objects[i] = new Giant((thisvec*500.0), Ogre::Vector3(0, 0, 0));
+				name << "_giant";
+                _objects[i] = new Giant((thisvec*500.0), Ogre::Vector3(0, 0, 0),name.str());
                 break;
             default:
                 cout << "new asteroid" << endl;
-                _objects[i] = new Asteroid((thisvec*500.0), Ogre::Vector3(0, 0, 0));
+				name << "_asteroid";
+                _objects[i] = new Asteroid((thisvec*500.0), Ogre::Vector3(0, 0, 0),name.str());
                 break;
 
         }

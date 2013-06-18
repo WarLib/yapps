@@ -9,7 +9,7 @@ using namespace std;
 
 const Ogre::String ThisType = "stars";
 
-Star::Star(Vec3 center, Ogre::Vector3 rot) : StellarObject(center, rot, 0) {
+Star::Star(Vec3 center, Ogre::Vector3 rot, Ogre::String name) : StellarObject(center, rot, 0, name) {
     double den, mass;
     Random & RANDGEN(Random::Instance());
     ReadCfg(ThisType, den, mass);

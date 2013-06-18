@@ -17,11 +17,13 @@ protected:
 
 	double _mass;
 	double _density;
-        Ogre::String mConfigFile;
-        
-        void ReadCfg(const Ogre::String& type, double& den, double& mass);
+	Ogre::String mConfigFile;
+
+	Ogre::String mName;
+
+	void ReadCfg(const Ogre::String& type, double& den, double& mass);
 public:
-	StellarObject(Vec3 center, Ogre::Vector3 rot, double colonization);
+	StellarObject(Vec3 center, Ogre::Vector3 rot, double colonization, Ogre::String name);
 	virtual void Update() = 0;
 	Vec3& GetCenter(void);
 	const Ogre::Vector3& GetRotation(void) const;
@@ -32,6 +34,9 @@ public:
 	void SetMass(double mass);
 
 	double GetRadius(void);
+
+	bool operator==(Ogre::String name);
+	Ogre::String& GetName(void);
 };
 
 #endif

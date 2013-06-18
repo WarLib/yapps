@@ -2,15 +2,17 @@
 #include <OISMouse.h>
 #include <iostream>
 #include <sstream>
+#include <algorithm>
 #include <OgreCamera.h>
+
 
 using namespace std;
 using namespace Yapps;
 //OnScreen Position Indicator
-PosIndicator::PosIndicator(StellarObject& target): _target(target) {};
+PosIndicator::PosIndicator(StellarObject* target): _target(target) {};
 
 bool PosIndicator::ProjectPos(Ogre::Camera* cam,Ogre::Real& x,Ogre::Real& y) {
-	Ogre::Vector3 eyeSpacePos = cam->getViewMatrix(true) * _target.GetCenter();
+	Ogre::Vector3 eyeSpacePos = cam->getViewMatrix(true) * _target->GetCenter();
 	// z < 0 means in front of cam
 	if (eyeSpacePos.z < 0) {
 		// calculate projected pos
@@ -25,8 +27,8 @@ bool PosIndicator::ProjectPos(Ogre::Camera* cam,Ogre::Real& x,Ogre::Real& y) {
 	}
 }
 
-bool    PosIndicator::ProjectSizeAndPos(Ogre::Camera* cam, const Ogre::Real rad, Ogre::Real& x,Ogre::Real& y,Ogre::Real& cx,Ogre::Real& cy) {
-	Ogre::Vector3 eyeSpacePos = cam->getViewMatrix(true) * _target.GetCenter();
+bool PosIndicator::ProjectSizeAndPos(Ogre::Camera* cam, const Ogre::Real rad, Ogre::Real& x,Ogre::Real& y,Ogre::Real& cx,Ogre::Real& cy) {
+	Ogre::Vector3 eyeSpacePos = cam->getViewMatrix(true) * _target->GetCenter();
 	// z < 0 means in front of cam
 	if (eyeSpacePos.z < 0) {
 		// calculate projected pos
@@ -47,6 +49,22 @@ bool    PosIndicator::ProjectSizeAndPos(Ogre::Camera* cam, const Ogre::Real rad,
 		return false;
 	}
 }
+
+
+bool PosIndicator::operator==(Ogre::String name) {
+	return *_target == name;
+}
+
+PosIndicator& PosIndicator::operator=(const PosIndicator& vgl){
+	this->_target = vgl._target;
+	return *this;
+}
+
+
+Ogre::String& PosIndicator::GetTargetName(void) {
+	return _target->GetName();
+}
+
 //
 CEGUI::MouseButton convertButton(OIS::MouseButtonID buttonID)
 {
@@ -159,6 +177,9 @@ void Ui::Init(Ogre::Camera* camera) {
 	CEGUI::WindowManager::setDefaultResourceGroup("Layouts");
 	CEGUI::ImagesetManager::getSingleton().create("Yapps.imageset");
 
+	CEGUI::System::getSingleton().setDefaultMouseCursor("Yapps/Main", "CursorTarget");
+	CEGUI::MouseCursor::getSingleton().setImage(CEGUI::System::getSingleton().getDefaultMouseCursor());
+
 
 	try {
 		CEGUI::SchemeManager::getSingleton().create("Yapps.scheme");
@@ -178,7 +199,11 @@ void Ui::Init(Ogre::Camera* camera) {
 //INGAME FLIGHT
 FlightUI* FlightUI::_instance = 0;
 
-FlightUI::FlightUI():Ui() {};
+FlightUI::FlightUI():Ui() {
+	Input::getInstance()->subscribe(this);
+	Input::getInstance()->setKeyBind("H","TOGGLE_VISIBLE_UI");
+	Input::getInstance()->setKeyBind("K","CYCLE_SCENES");
+};
 
 FlightUI* FlightUI::getSingleton(void) {
 	if (_instance == 0) {
@@ -197,17 +222,19 @@ void FlightUI::Show(void) {
 	CEGUI::WindowManager* Wmgr = CEGUI::WindowManager::getSingletonPtr();
 
 	try {
-		CEGUI::Window* MyRoot;
 		MyRoot = Wmgr->createWindow("DefaultWindow","ROOT");
 		for (int i = 0; i < _targets.size(); i++) {
-			stringstream name;
+			std::stringstream name;
 			name << "Indicator" << i;
 			_indicators.push_back(Wmgr->createWindow("Yapps/StaticImage",name.str()));
 			_indicators[i]->setProperty("Image", "set:Yapps/Main image:Lock");
 			MyRoot->addChildWindow(_indicators[i]);
-			//_indicators[i]->setPosition( CEGUI::UVector2( CEGUI::UDim( 0.0f, 0.0f ), CEGUI::UDim( 0.0f, 0.0f) ) );
-			//_indicators[i]->setSize( CEGUI::UVector2( CEGUI::UDim( 0.1f, 0.0f ), CEGUI::UDim( 0.1f, 0.0f ) ) );
 		}
+
+		MyFps = Wmgr->createWindow("Yapps/StaticText","FPS");
+		MyRoot->addChildWindow(MyFps);
+		MyFps->setPosition(CEGUI::UVector2( CEGUI::UDim(0.0f , 0.0f ), CEGUI::UDim(0.0f , 0.0f) ) );
+		MyFps->setText("0");
 
 		mGUISystem->setGUISheet(MyRoot);
 
@@ -228,20 +255,67 @@ void FlightUI::Show(void) {
 	}
 }
 
-void FlightUI::InjectKeyDown() {
+void FlightUI::InjectKeyDown(const OIS::KeyEvent &arg) {
 }
 
-void FlightUI::AddIndicator(StellarObject& Object) {
+void FlightUI::InjectKeyUp(const OIS::KeyEvent &arg){
+}
+
+
+void FlightUI::AddIndicator(StellarObject* Object) {
 	_targets.push_back(PosIndicator(Object));
 }
 
-void FlightUI::update(Ogre::Real time) {
+void FlightUI::DelIndicator(Ogre::String name) {
+	std::vector<PosIndicator>::iterator pos,vgl;
+	std::vector<CEGUI::Window*>::iterator window_it;
+	pos = std::find(_targets.begin(), _targets.end(),name);
+
+	window_it = _indicators.begin();
+	vgl = _targets.begin();
+
+	while (vgl != pos) {
+		vgl++;
+		window_it++;
+	}
+
+	CEGUI::WindowManager::getSingletonPtr()->destroyWindow((*window_it));
+	_targets.erase(pos);
+	_indicators.erase(window_it);
+}
+
+void FlightUI::update(Ogre::Real time, const Ogre::Vector3& campos) {
+	static double timepassed = 0;
+	timepassed += time;
+
+	//	tmp_x = mCameraMan->getCamera()->getDerivedPosition().x;
+	//	tmp_y = mCameraMan->getCamera()->getDerivedPosition().y;
+	//	tmp_z = mCameraMan->getCamera()->getDerivedPosition().z;
+
+	//	if (DiffBetrag(res_x,tmp_x) > thresh || DiffBetrag(res_y,tmp_y) > thresh ||DiffBetrag(res_z,tmp_z) > thresh) {
+	//		cout << "Camera pos: " << mCameraMan->getCamera()->getDerivedPosition() << endl;
+	//res_x = tmp_x;
+	//res_y = tmp_y;
+	//res_z = tmp_z;
+	//}
+
+	//	CEGUI::System::getSingleton().injectTimePulse(evt.timeSinceLastFrame);
+	// -------------- GUI TEST -----------------
+
+
+	if (timepassed >= 0.75) {
+		std::stringstream string_fps;
+		double fps = FPSCounter::GetInstance().GetFps();
+		string_fps << (int)fps;
+		MyFps->setText(string_fps.str());
+		timepassed = 0;
+	}
 	for (int i = 0; i < _targets.size(); i++) {
 		Ogre::Real tmp_x, tmp_y;
 		Ogre::Real size_x,size_y,relative;
 		bool visible;
 		_targets[i].ProjectSizeAndPos(_camera,100,tmp_x,tmp_y,size_x,size_y);
-		visible = (tmp_x > -1 && tmp_x < 1 && tmp_y > -1 && tmp_y < 1);
+		visible = (tmp_x > -1.5 && tmp_x < 1.5 && tmp_y > -1.5 && tmp_y < 1.5);
 		if (visible) {
 			relative = size_x / size_y;
 			if (tmp_x < -1) {
@@ -271,5 +345,25 @@ void FlightUI::update(Ogre::Real time) {
 			_indicators[i]->setSize( CEGUI::UVector2( CEGUI::UDim( 0.1f * size_x / 100 , 0.0f ), CEGUI::UDim( 0.1f * size_y / 100 , 0.0f ) ) );
 		}
 		_indicators[i]->setVisible(visible);
+	}
+}
+
+void FlightUI::dispatch(std::string msg) {
+	static int tmp = 0;
+	if (msg == "TOGGLE_VISIBLE_UI") {
+		MyRoot->setVisible(!(MyRoot->isVisible()));
+	} else if (msg == "CYCLE_SCENES") {
+		tmp++;
+		switch (tmp % 3) {
+		case 0:
+			GameState::getSingleton().SwitchScene(IN_INTRO);
+			break;
+		case 1:
+			GameState::getSingleton().SwitchScene(MAIN_MENU);
+			break;
+		case 2:
+			GameState::getSingleton().SwitchScene(IN_GAME);
+			break;
+		}
 	}
 }

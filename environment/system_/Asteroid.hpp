@@ -6,7 +6,7 @@
 class Asteroid: public StellarObject {
 protected:
 public:
-	Asteroid(Vec3 center, Ogre::Vector3 rot);
+	Asteroid(Vec3 center, Ogre::Vector3 rot, Ogre::String name);
 	void Update();
 };
 

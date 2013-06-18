@@ -16,25 +16,13 @@ http://www.ogre3d.org/tikiwiki/
 */
 #include "yappsWindow.h"
 #include <OgreParticleSystem.h>
-
-//-------------------------------------------------------------------------------------
-
-//tmp global campos
-double res_x = 0, res_y = 0, res_z = 0;
-
-
-double DiffBetrag(double a, double b) {
-	double tmp = a - b;
-	if (tmp < 0)
-		return -tmp;
-	return tmp;
-}
+#include "fpscounter.hpp"
 
 //-------------------------------------------------------------------------------------
 yappsWindow::yappsWindow(void)
 	: mRoot(0),
 	mCamera(0),
-	mSceneMgr(0),
+//	mSceneMgr(0),
 	mWindow(0),
 	mResourcesCfg(Ogre::StringUtil::BLANK),
 	mPluginsCfg(Ogre::StringUtil::BLANK),
@@ -67,10 +55,13 @@ bool yappsWindow::configure(void) {
 	// Show the configuration dialog and initialise the system
 	// You can skip this and use root.restoreConfig() to load configuration
 	// settings if you were sure there are valid ones saved in ogre.cfg
-	if (mRoot->showConfigDialog()) {
+	if (mRoot->restoreConfig()) {
+		mWindow = mRoot->initialise(true, "Yapps");
+		return true;
+	} else if (mRoot->showConfigDialog()) {
 		// If returned true, user clicked OK so initialise
 		// Here we choose to let the system create a default rendering window by passing 'true'
-		mWindow = mRoot->initialise(true, "TutorialApplication Render Window");
+		mWindow = mRoot->initialise(true, "Yapps");
 
 		return true;
 	} else {
@@ -81,24 +72,24 @@ bool yappsWindow::configure(void) {
 
 void yappsWindow::chooseSceneManager(void) {
 	// Get the SceneManager, in this case a generic one
-	mSceneMgr = mRoot->createSceneManager(Ogre::ST_GENERIC);
+//	mSceneMgr = mRoot->createSceneManager(Ogre::ST_GENERIC);
 }
 //-------------------------------------------------------------------------------------
 
 void yappsWindow::createCamera(void) {
 	// Create the camera
-	mCamera = mSceneMgr->createCamera("PlayerCam");
+	mCamera = ((Ogre::SceneManager*)(*GameState::getSingleton().GetActiveScene()))->getCamera(CAMERA_NAME);
 
 	// Position it at 500 in Z direction
-//	mCamera->setPosition(Ogre::Vector3(0, 0, 80));
+	//	mCamera->setPosition(Ogre::Vector3(0, 0, 80));
 	mCamera->setPosition(Ogre::Vector3(-6636.61, 12.1833, 118330));
 	// Look back along -Z
 	mCamera->lookAt(Ogre::Vector3(0, 0, -300));
 	mCamera->setNearClipDistance(1);
 	mCamera->setFarClipDistance(800000000000);
-//	mCamera->setOrientationMode(Ogre::OR_PORTRAIT);
+	//	mCamera->setOrientationMode(Ogre::OR_PORTRAIT);
 	mCameraMan = new OgreBites::SdkCameraMan(mCamera); // create a default camera controller
-	
+
 	FlightUI* ThisUi = FlightUI::getSingleton();
 	ThisUi->Init(mCamera);
 
@@ -153,12 +144,14 @@ void yappsWindow::destroyScene(void) {
 
 void yappsWindow::createViewports(void) {
 	// Create one viewport, entire window
-	Ogre::Viewport* vp = mWindow->addViewport(mCamera);
+/*	Ogre::Viewport* vp = mWindow->addViewport(mCamera);
 	vp->setBackgroundColour(Ogre::ColourValue(0, 0, 0));
 
 	// Alter the camera aspect ratio to match the viewport
 	mCamera->setAspectRatio(
 		Ogre::Real(vp->getActualWidth()) / Ogre::Real(vp->getActualHeight()));
+		*/
+	GameState::getSingleton().SwitchScene(IN_GAME);
 }
 //-------------------------------------------------------------------------------------
 
@@ -232,6 +225,8 @@ bool yappsWindow::setup(void) {
 
 	bool carryOn = configure();
 	if (!carryOn) return false;
+	GameState::getSingleton().InjectRoot(mRoot,mWindow);
+	GameState::getSingleton().SwitchScene(IN_GAME);
 
 	chooseSceneManager();
 	createCamera();
@@ -255,8 +250,6 @@ bool yappsWindow::setup(void) {
 //-------------------------------------------------------------------------------------
 
 bool yappsWindow::frameRenderingQueued(const Ogre::FrameEvent& evt) {
-	double tmp_x, tmp_y, tmp_z; 
-	static const double thresh = 100;
 	if (mWindow->isClosed())
 		return false;
 
@@ -271,21 +264,8 @@ bool yappsWindow::frameRenderingQueued(const Ogre::FrameEvent& evt) {
 	// -------------- GUI TEST -----------------
 	mCameraMan->frameRenderingQueued(evt); // if dialog isn't up, then update the camera
 
-	tmp_x = mCameraMan->getCamera()->getDerivedPosition().x;
-	tmp_y = mCameraMan->getCamera()->getDerivedPosition().y;
-	tmp_z = mCameraMan->getCamera()->getDerivedPosition().z;
-
-	if (DiffBetrag(res_x,tmp_x) > thresh || DiffBetrag(res_y,tmp_y) > thresh ||DiffBetrag(res_z,tmp_z) > thresh) {
-		cout << "Camera pos: " << mCameraMan->getCamera()->getDerivedPosition() << endl;
-		res_x = tmp_x;
-		res_y = tmp_y;
-		res_z = tmp_z;
-	}
-
-	//	CEGUI::System::getSingleton().injectTimePulse(evt.timeSinceLastFrame);
-	// -------------- GUI TEST -----------------
-
-	Ui::GetActiveUi()->update(evt.timeSinceLastFrame);
+	Ui::GetActiveUi()->update(evt.timeSinceLastFrame,mCameraMan->getCamera()->getDerivedPosition());
+	FPSCounter::GetInstance().InjectTime(evt.timeSinceLastFrame);
 	return true;
 }
 //-------------------------------------------------------------------------------------
@@ -293,15 +273,7 @@ bool yappsWindow::frameRenderingQueued(const Ogre::FrameEvent& evt) {
 bool yappsWindow::keyPressed(const OIS::KeyEvent &arg) {
 	yInputManager->publish(mKeyboard->getAsString(arg.key)); //***************** FANGEN DER KEYS
 
-	if (arg.key == OIS::KC_F) // toggle visibility of advanced frame stats
-	{
-	} else if (arg.key == OIS::KC_G) // toggle visibility of even rarer debugging details
-	{
-	} else if (arg.key == OIS::KC_T) // cycle polygon rendering mode
-	{
-	} else if (arg.key == OIS::KC_R) // cycle polygon rendering mode
-	{
-	} else if (arg.key == OIS::KC_F5) // refresh all textures
+	if (arg.key == OIS::KC_F5) // refresh all textures
 	{
 		Ogre::TextureManager::getSingleton().reloadAll();
 	} else if (arg.key == OIS::KC_SYSRQ) // take a screenshot
@@ -377,42 +349,23 @@ void yappsWindow::windowClosed(Ogre::RenderWindow* rw) {
 
 void yappsWindow::createScene(void) {
 	int n = 1000;
-	string seed = "asteroiddddsseed";
-	mSceneMgr->setShadowTechnique(Ogre::SHADOWTYPE_TEXTURE_MODULATIVE);
+	Ogre::SceneManager* mSceneMgr = *GameState::getSingleton().GetActiveScene();
+	string seed = "JulianUndTristanBauenYapps";
 	mSceneMgr->setAmbientLight(Ogre::ColourValue(0.2f, 0.2f, 0.2f));
 	mSceneMgr->setSkyBox(true, "MySky");
 
 	FlightUI* ThisUi = FlightUI::getSingleton();
-	// -------------- GUI TEST ----------------
-	//mRenderer = &CEGUI::OgreRenderer::bootstrapSystem();
-
-
-	//CEGUI::SchemeManager::getSingleton().create("TaharezLook.scheme");
-	//CEGUI::System::getSingleton().setDefaultMouseCursor("TaharezLook", "MouseArrow");
-	// -------------- GUI TEST ----------------
 
 	Yapps::ControllableObject* TESTOBJEKT = new Yapps::Object(mSceneMgr, "Something", "carrier");
 	yInputManager->subscribe(TESTOBJEKT);
 
 	Galaxy & MyGalaxy(Galaxy::GetGalaxy(n, 8, seed, true));
 	System** MySystems = MyGalaxy.GetSystems(n);
-	/*for (int i = 0; i < n; i++) {
-	stringstream name;
-	name << "System" << i;
-	System & thisSystem(*(MySystems[i]));
 
-	//Ogre::SceneNode* particleNode = mSceneMgr->getRootSceneNode()->crSieateChildSceneNode(name.str(),Ogre::Vector3(thisSystem.GetCenter().GetOrdinates(X),thisSystem.GetCenter().GetOrdinates(Y),thisSystem.GetCenter().GetOrdinates(Z)));
-	Ogre::Entity* System = mSceneMgr->createEntity(name.str(), "sphere.mesh");
-	name << "node";
-	Ogre::SceneNode* SystemNode = mSceneMgr->getRootSceneNode()->createChildSceneNode(name.str(), Ogre::Vector3(thisSystem.GetCenter().GetOrdinates(X), thisSystem.GetCenter().GetOrdinates(Y), thisSystem.GetCenter().GetOrdinates(Z)));
-	SystemNode->attachObject(System);
-
-	SystemNode->scale(0.001, 0.001, 0.001);
-	}*/
 	StellarObject** MyObjects = MySystems[0]->GetObjects(n);
 
 	for (int i = 0; i < n; i++) {
-		stringstream name;
+		std::stringstream name;
 		name << "Object" << i;
 		StellarObject & thisObject(*(MyObjects[i]));
 
@@ -420,7 +373,7 @@ void yappsWindow::createScene(void) {
 		Ogre::Entity* System = mSceneMgr->createEntity(name.str(), thisObject.GetMeshName());
 		name << "node";
 		//thisObject.GetCenter() *= 500.0;
-		ThisUi->AddIndicator(thisObject);
+		ThisUi->AddIndicator(MyObjects[i]);
 		Ogre::SceneNode* SystemNode = mSceneMgr->getRootSceneNode()->createChildSceneNode(name.str(), Ogre::Vector3(thisObject.GetCenter()));
 		SystemNode->attachObject(System);
 
@@ -435,8 +388,6 @@ void yappsWindow::createScene(void) {
 	}
 
 
-	//	Ogre::ManualObject* manual = mSceneMgr->createManualObject("manual");
-	//	manual->begin("BaseWhiteNoLighting", Ogre::RenderOperation::OT_POINT_LIST);
 	Ogre::Entity* LightBulb = mSceneMgr->createEntity("LightPos", "sphere.mesh");
 
 	Ogre::SceneNode* Light1Node = mSceneMgr->getRootSceneNode()->createChildSceneNode("LightPosNode", Ogre::Vector3(-600.0f, 100.0f, 50.0f));
@@ -459,15 +410,7 @@ void yappsWindow::createScene(void) {
 	light2->setPosition(-500.0f, 120.0f, -50.0f);
 
 	ThisUi->Show();
-
 }
-
-
-
-
-
-
-
 
 #if OGRE_PLATFORM == OGRE_PLATFORM_WIN32
 #define WIN32_LEAN_AND_MEAN
@@ -479,14 +422,6 @@ extern "C" {
 #endif
 
 	int main(int argc, char *argv[]) {
-		// Create application object
-		/*Yapps::Vec3 MyVec(0,0,0,1,1,1);
-		Yapps::grid_vec adjectant[26];
-		MyVec.getAdjectant(adjectant);
-		for (int idx = 0; idx < 26; idx++) {
-		cout << "x:\t" << adjectant[idx].x << "\ty:\t" << adjectant[idx].y << "\tz:\t" << adjectant[idx].z << endl;
-		}
-		*/
 		yappsWindow app;
 		try {
 			app.go();

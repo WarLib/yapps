@@ -30,6 +30,7 @@
 #include <iostream>
 
 #include "ui.hpp"
+#include "state.hpp"
 
 class yappsWindow : public Ogre::FrameListener, public Ogre::WindowEventListener, public OIS::KeyListener, public OIS::MouseListener, OgreBites::SdkTrayListener, public  Yapps::Listener
 {
@@ -71,7 +72,7 @@ protected:
 
 	Ogre::Root *mRoot;
     Ogre::Camera* mCamera;
-    Ogre::SceneManager* mSceneMgr;
+    //Ogre::SceneManager* mSceneMgr;
     Ogre::RenderWindow* mWindow;
     Ogre::String mResourcesCfg;
     Ogre::String mPluginsCfg;

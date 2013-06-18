@@ -5,7 +5,7 @@
 class Star: public StellarObject {
 protected:
 public:
-	Star(Vec3 center, Ogre::Vector3 rot);
+	Star(Vec3 center, Ogre::Vector3 rot, Ogre::String name);
 	void Update();
 };
 

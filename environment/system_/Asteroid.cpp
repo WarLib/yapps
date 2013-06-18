@@ -3,7 +3,7 @@
 
 const Ogre::String ThisType = "asteroids";
 
-Asteroid::Asteroid(Vec3 center, Ogre::Vector3 rot) : StellarObject(center, rot, 0) {
+Asteroid::Asteroid(Vec3 center, Ogre::Vector3 rot, Ogre::String name) : StellarObject(center, rot, 0, name) {
 	cout << "New Asteroid at " << center << endl;
     double den, mass;
     Random & RANDGEN(Random::Instance());
