@@ -31,9 +31,13 @@ namespace Yapps {
 class Listener {
     public:
         virtual void dispatch(std::string msg) {};
+        virtual void mousemove(int xrel, int yrel){};
 
         virtual void notify(std::string msg) {
             dispatch(msg);
+            };
+        virtual void notifyMouse(int xrel, int yrel) {
+            mousemove(xrel, yrel);
             };
         virtual void frame(Ogre::Real elapsed){
         };
@@ -43,7 +47,8 @@ class Listener {
 class Input {
     private:
         Yapps::Listener** Callbacks;
-        int CallbacksLen;
+        Yapps::Listener** CallbacksMouse;
+        int CallbacksLen, CallbacksLenMouse;
 
         std::list<Listener*> frameListener;
 
@@ -62,6 +67,12 @@ class Input {
             Callbacks[CallbacksLen] = client;
             CallbacksLen++;
             }
+
+        void subscribeMouse( Yapps::Listener* client ) {
+            CallbacksMouse[CallbacksLenMouse] = client;
+            CallbacksLenMouse++;
+            }
+
         void subscribeFrames( Yapps::Listener* client ) {
            frameListener.push_back(client);
             }
@@ -76,25 +87,39 @@ class Input {
             std::stringstream o;
             o << arg;
             std::cout << o.str() << std::endl;
-            for (int i=0; i < CallbacksLen; i++)
-                Callbacks[i]->notify( keybinds[ o.str() ]);
+            for (int i=0; i < CallbacksLen; i++){
+                std::cout << "sub!"<< std::endl;
+                Callbacks[i]->notify( keybinds[ o.str() ]);}
             }
+        void publishMouse (int xrel, int yrel) {
+            std::stringstream o;
+            o << xrel;
+            o << "  ";
+            o << yrel;
+
+            std::cout << o.str() << std::endl;
+            for (int i=0; i < CallbacksLenMouse; i++)
+                CallbacksMouse[i]->notifyMouse( xrel, yrel );
+            }
+
         void setKeyBind(std::string key, std::string value) {
             keybinds.insert (
                 std::pair<std::string, std::string>(key, value )
             );
-            }
+            };
     private:
         Input() {
             CallbacksLen = 0;
+            CallbacksLenMouse = 0;
             Callbacks = new Yapps::Listener*[32];
+            CallbacksMouse = new Yapps::Listener*[16];  // Full revamp here please!!
 
             /* Move this area to a configfile */
             loadConfig();/*
         setKeyBind("w", "forward");
         setKeyBind("s", "backward");
         setKeyBind("a", "left");*/
-            setKeyBind("d", "right");
+            //setKeyBind("d", "right");
             saveConfig(); // OFC THIS IS DEBUGGING ONLY
             }
         void loadConfig();

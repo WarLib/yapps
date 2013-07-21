@@ -29,6 +29,18 @@
 #include <string>
 #include <iostream>
 
+
+
+ #include "OgreBulletDynamicsRigidBody.h"				 // for OgreBullet
+ #include "Shapes/OgreBulletCollisionsStaticPlaneShape.h" // for static planes
+ #include "Shapes/OgreBulletCollisionsBoxShape.h"
+
+#include <Utils/OgreBulletCollisionsMeshToShapeConverter.h>
+
+
+
+
+
 #include "physics/physics.h"
 
 class yappsWindow : public Ogre::FrameListener, public Ogre::WindowEventListener, public OIS::KeyListener, public OIS::MouseListener, OgreBites::SdkTrayListener, public  Yapps::Listener
@@ -40,7 +52,7 @@ public:
     virtual void go(void);
 
 protected:
-    physicsUniverse physics;
+    Yapps::physicsUniverse* physics;
 
     virtual bool setup();
     virtual bool configure(void);
@@ -77,6 +89,8 @@ protected:
     Ogre::RenderWindow* mWindow;
     Ogre::String mResourcesCfg;
     Ogre::String mPluginsCfg;
+
+    Yapps::Object* _focus;
 
     // OgreBites
     OgreBites::SdkTrayManager* mTrayMgr;

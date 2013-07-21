@@ -3,17 +3,45 @@
 
 
 using namespace Yapps;
-Object::Object(Ogre::SceneManager* mSceneMgr, std::string name, std::string type, Vec3 pos){
+Object::Object(Ogre::SceneManager* mSceneMgr,OgreBulletDynamics::DynamicsWorld* world, std::string name, std::string type, Vec3 pos){
+    std::cout << "BUILDING OBJECT"<< std::endl;
         this->mSceneMgr = mSceneMgr;
         std::string endungMesh = ".mesh";
         std::string myMesh = type+endungMesh;
+            std::cout << "LOADING OBJECT"<< std::endl;
         mEntity = mSceneMgr->createEntity(name.c_str(), myMesh.c_str());
+        mEntity->setMaterialName("Examples/Rocky");
+
+            std::cout << "LOADING OBJECT DONE"<< std::endl;
         mMainNode = mSceneMgr->getRootSceneNode()->createChildSceneNode(name, position ); //+Position!
         mMainNode->attachObject(mEntity);
+    std::cout << "ATTACHED OBJECT"<< std::endl;
 
-        mMainNode->scale(0.06,0.06,0.06);
 
 
+
+
+//        Ogre::SceneNode *node = mSceneMgr->getRootSceneNode()->createChildSceneNode();
+//    node->attachObject(entity);
+//    node->scale(0.05f, 0.05f, 0.05f);   // the cube is too big for us
+//    size *= 0.05f;                  // don't forget to scale down the Bullet-box too
+
+
+    //    entity->setCastShadows(true);
+    //Ogre::Entity *entity = mSceneMgr->createEntity(
+     //                          "Box" + Ogre::StringConverter::toString(9),
+     //                          "cube.mesh");
+
+
+
+        Funktor* testmouse = new test_mouseturn();
+        testmouse->setParent(this);
+        abilities.push_back(testmouse);
+        bind("mousex",testmouse);
+        Funktor* testmousey = new test_mouseyaw();
+        testmousey->setParent(this);
+        abilities.push_back(testmousey);
+        bind("mousey",testmousey);
 
         Funktor* rotDown = new trn_pitch_d();
         rotDown->setParent(this);
@@ -53,8 +81,18 @@ Object::Object(Ogre::SceneManager* mSceneMgr, std::string name, std::string type
         tellMeAboutFrames.push_back(rotlis);
 
         position = pos;
-        physicalMe = new physicalEntity(position);
 
+
+
+
+  mMainNode->scale(0.06,0.06,0.06);
+  mMainNode->scale(rand()%100 /100.0,rand()%100 /100.0,rand()%100 /100.0);
+         mMainNode->setPosition(pos);
+             std::cout << "PHYSICAL OBJECT"<< std::endl;
+physicalMe = new physicalEntity(name, position, mMainNode, mEntity, world);
+mEntity->setCastShadows(true);
+
+    std::cout << "BUILDING OBJECT DONE"<< std::endl;
 }
 
 
@@ -74,12 +112,9 @@ Ogre::Vector3 Object::getWorldPosition() {
 
 void Object::frame(Ogre::Real elapsed){
 
-    position = physicalMe->toYVec3();
     //std::cout << position << std::endl;
 for (std::list<Funktor*>::iterator iter = tellMeAboutFrames.begin(); iter != tellMeAboutFrames.end(); ++iter)
     (*iter)->frame(elapsed);
 
-    mMainNode->setPosition(position);
-    mMainNode->setOrientation( physicalMe->toQuat() );
 return ;
  }

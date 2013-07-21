@@ -34,13 +34,12 @@ class Object;
 #include "Funktor.h"
 #include "ControllableObject.h"
 
+
 #include "../environment/world.hpp"
 #include "../physics/physics.h"
 
 namespace Yapps
 {
-
-
 
 
 class Object:  public ControllableObject
@@ -66,7 +65,7 @@ public:
     virtual void frame(Ogre::Real elapsed);
 
 
-    Object(Ogre::SceneManager* mSceneMgr, std::string name, std::string type, Vec3 pos = Vec3(0,0,0) );
+    Object(Ogre::SceneManager* mSceneMgr, OgreBulletDynamics::DynamicsWorld* world,std::string name, std::string type, Vec3 pos = Vec3(0,0,0) );
 
     Ogre::SceneNode *getSightNode();
     Ogre::SceneNode *getCameraNode();

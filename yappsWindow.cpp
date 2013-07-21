@@ -258,10 +258,18 @@ bool yappsWindow::setup(void)
     loadResources();
 
     // Create the scene
-    createScene();
+
 
     createFrameListener();
 
+    mSceneMgr->setAmbientLight(Ogre::ColourValue(0, 0, 0));
+    mSceneMgr->setShadowTechnique(Ogre::SHADOWTYPE_TEXTURE_MODULATIVE);
+
+    physics = new Yapps::physicsUniverse(mSceneMgr);
+
+
+
+     createScene();
     return true;
 };
 //-------------------------------------------------------------------------------------
@@ -295,9 +303,18 @@ bool yappsWindow::frameRenderingQueued(const Ogre::FrameEvent& evt)
         }
     }
 
-    std::cout << evt.timeSinceLastFrame << std::endl;
-    physics.dynamicsWorld->stepSimulation(evt.timeSinceLastFrame*10,10);
-    yInputManager->publishFrame(evt.timeSinceLastFrame);
+    //std::cout << evt.timeSinceLastFrame << std::endl;
+    try{
+    if (evt.timeSinceLastFrame != 0 )
+    physics->dynamicsWorld->stepSimulation(evt.timeSinceLastFrame*10);
+    }
+    catch(...){std::cout << "crap"<< std::cout;}
+
+     mCamera->setPosition(_focus->mMainNode->getPosition() + _focus->mMainNode->getOrientation()*Ogre::Vector3(0,10,100));
+     mCamera->setOrientation( _focus->physicalMe->myChassis->getCenterOfMassOrientation() );
+     //mCamera->lookAt( _focus->mMainNode->getPosition() );
+
+    //yInputManager->publishFrame(evt.timeSinceLastFrame);
     return true;
 }
 //-------------------------------------------------------------------------------------
@@ -305,11 +322,11 @@ bool yappsWindow::frameRenderingQueued(const Ogre::FrameEvent& evt)
 bool yappsWindow::keyPressed(const OIS::KeyEvent &arg)
 {
     static int i = 0;
-        stringstream name;
-        name << "Objectopr" << i++;
-        Yapps::ControllableObject* TESTOBJEKT = new Yapps::Object(mSceneMgr, name.str(), "cube", Vec3( rand()%50 -25 ,1000,rand()%50 -25) );
-        yInputManager->subscribeFrames(TESTOBJEKT);
-        physics.dynamicsWorld->addRigidBody( dynamic_cast<Yapps::Object*>(TESTOBJEKT)->physicalMe->myBody );
+    stringstream name;
+    name << "Objectopr" << i++;
+    //Yapps::ControllableObject* TESTOBJEKT = new Yapps::Object(mSceneMgr, name.str(), "cube", Vec3( rand()%50 -25 ,1000,rand()%50 -25) );
+    //yInputManager->subscribeFrames(TESTOBJEKT);
+    //physics->dynamicsWorld->addRigidBody( dynamic_cast<Yapps::Object*>(TESTOBJEKT)->physicalMe->myBody );
 
 
 
@@ -403,7 +420,7 @@ bool yappsWindow::keyPressed(const OIS::KeyEvent &arg)
         mShutDown = true;
     }
 
-    mCameraMan->injectKeyDown(arg);
+    //mCameraMan->injectKeyDown(arg);
     return true;
 }
 
@@ -415,8 +432,12 @@ bool yappsWindow::keyReleased(const OIS::KeyEvent &arg)
 
 bool yappsWindow::mouseMoved(const OIS::MouseEvent &arg)
 {
+    cout << arg.state.X.rel << "--"<<arg.state.Y.rel << endl;
+     yInputManager->publishMouse(arg.state.X.rel,arg.state.Y.rel  ); //***************** FANGEN DER KEYS
+
     if (mTrayMgr->injectMouseMove(arg)) return true;
     mCameraMan->injectMouseMove(arg);
+
     return true;
 }
 
@@ -465,30 +486,34 @@ void yappsWindow::windowClosed(Ogre::RenderWindow* rw)
     }
 }
 
+
 void yappsWindow::createScene(void)
 {
     int n = 1000;
     string seed = "magicrootseed";
-    mSceneMgr->setAmbientLight(Ogre::ColourValue(0.5f, 0.5f, 0.5f));
+    mSceneMgr->setAmbientLight(Ogre::ColourValue(0.2f, 0.2f, 0.2f));
     mSceneMgr->setSkyBox(true, "MySky");
 
-    Yapps::ControllableObject* TESTOBJEKT = new Yapps::Object(mSceneMgr, "Something", "yappsShip", Vec3(1,20,1) );
+
+    mSceneMgr->setShadowTechnique(Ogre::SHADOWTYPE_TEXTURE_MODULATIVE);
+
+    Yapps::ControllableObject* TESTOBJEKT = new Yapps::Object(mSceneMgr, physics->dynamicsWorld, "Something", "sphere", Vec3(10,50,10));
+    _focus = dynamic_cast<Yapps::Object*>(TESTOBJEKT);
+
     //mRoot->addFrameListener( (Ogre::FrameListener*)TESTOBJEKT);
     yInputManager->subscribeKeys(TESTOBJEKT);
-    yInputManager->subscribeFrames(TESTOBJEKT);
-    physics.dynamicsWorld->addRigidBody( dynamic_cast<Yapps::Object*>(TESTOBJEKT)->physicalMe->myBody );
+    yInputManager->subscribeMouse(TESTOBJEKT);
+    //yInputManager->subscribeFrames(TESTOBJEKT);
+    //physics->dynamicsWorld->addRigidBody( dynamic_cast<Yapps::Object*>(TESTOBJEKT)->physicalMe->myBody );
 
 
 
-    for (int i = 0; i < 1250; i++ )
+
+    for (int i = 0; i < 100; i++ )
     {
         stringstream name;
         name << "Objector" << i;
-        TESTOBJEKT = new Yapps::Object(mSceneMgr, name.str(), "cube", Vec3( rand()%50 -25 ,5+3.5*i,rand()%50 -25) );
-        yInputManager->subscribeFrames(TESTOBJEKT);
-        physics.dynamicsWorld->addRigidBody( dynamic_cast<Yapps::Object*>(TESTOBJEKT)->physicalMe->myBody );
-
-
+         TESTOBJEKT = new Yapps::Object(mSceneMgr, physics->dynamicsWorld, name.str(), "sphere",Vec3( rand()%50 -25 ,50,rand()%50 -25) );
         //dynamic_cast<Yapps::Object*>(TESTOBJEKT)->physicalMe->myBody->applyImpulse( btVector3(0,0,200), btVector3(0,0,0) );
     }
 
@@ -496,7 +521,7 @@ void yappsWindow::createScene(void)
 
     //TESTOBJEKT = new Yapps::Object(mSceneMgr, "Something", "yappsShip", Vec3(0,12,0));
     //mRoot->addFrameListener( (Ogre::FrameListener*)TESTOBJEKT);
-    //physics.dynamicsWorld->addRigidBody( dynamic_cast<Yapps::Object*>(TESTOBJEKT)->physicalMe->myBody );
+    //physics->dynamicsWorld->addRigidBody( dynamic_cast<Yapps::Object*>(TESTOBJEKT)->physicalMe->myBody );
 
 
 
@@ -545,8 +570,20 @@ void yappsWindow::createScene(void)
     //	manual->begin("BaseWhiteNoLighting", Ogre::RenderOperation::OT_POINT_LIST);
 
     Ogre::Light* light = mSceneMgr->createLight("MainLight");
-    light->setPosition(20.0f, 80.0f, 50.0f);
+    light->setPosition(00.0f, 20.0f, 20.0f);
+    light->setType(Ogre::Light::LT_POINT);
+    light->setDiffuseColour(0.3, 0.0, 0.0);
+    light->setSpecularColour(1.0, 0.0, 0.0);
 
+    light = mSceneMgr->createLight("SideLight");
+    light->setPosition(30.0f, 30.0f, 00.0f);
+    light->setType(Ogre::Light::LT_POINT);
+    light->setDiffuseColour(0.0, 0.3, 0.0);
+    light->setSpecularColour(0.0, 1.0, 0.0);
+    //light->setCastShadows(true);
+
+//mCamera->setNearClipDistance(2);
+//mCamera->setFarClipDistance(500);
 }
 
 

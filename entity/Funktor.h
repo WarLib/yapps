@@ -15,7 +15,7 @@ class Funktor {
         Object* parent;
 
         virtual void setParent ( Object * p){parent = p;};
-        virtual void call() {};
+        virtual void call(int argc=0, void* argv=NULL) {};
         virtual void frame(Ogre::Real elapsed){};
 
 
@@ -26,24 +26,33 @@ class Funktor {
 
 class trn_pitch_d: public Funktor {
     public:
-        void call();
+        void call(int argc=0, void* argv=NULL);
     };
+class test_mouseturn: public Funktor{
+public:
+    void call(int argc=0, void* argv=NULL);
+};
+class test_mouseyaw: public Funktor{
+public:
+    void call(int argc=0, void* argv=NULL);
+};
+
 class trn_pitch_u: public Funktor {
     public:
-        void call();
+        void call(int argc=0, void* argv=NULL);
     };
 class trn_yaw_l: public Funktor {
     public:
-        void call();
+        void call(int argc=0, void* argv=NULL);
     };
 class trn_yaw_r: public Funktor {
     public:
-        void call();
+        void call(int argc=0, void* argv=NULL);
     };
 
 class mv_accelerate: public Funktor {
     public:
-        void call();
+        void call(int argc=0, void* argv=NULL);
     };
 
 

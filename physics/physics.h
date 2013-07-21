@@ -3,9 +3,23 @@
 
 
 #include <iostream>
+#include <cmath>
+
+#include <sstream>
+#include <string>
+
 
 #include <btBulletDynamicsCommon.h>
-#include <OgreBulletCollisions.h>
+
+#include "OgreBulletDynamics.h"
+#include "OgreBulletDynamicsRigidBody.h"				 // for OgreBullet
+#include "Shapes/OgreBulletCollisionsTrimeshShape.h"
+#include "Shapes/OgreBulletCollisionsStaticPlaneShape.h" // for static planes
+#include "Shapes/OgreBulletCollisionsBoxShape.h"
+#include "Shapes/OgreBulletCollisionsSphereShape.h"
+#include "Shapes/OgreBulletCollisionsCompoundShape.h"
+
+
 #include <Utils/OgreBulletCollisionsMeshToShapeConverter.h>
 #include <list>
 
@@ -13,31 +27,35 @@
 #include <OgreEntity.h>
 
 #include <fstream>
+
+namespace Yapps
+{
+
+class physicsUniverse;
+
+}
+
 #include "../environment/ordinates.hpp"
 namespace Yapps
 {
 
+
+
 class physicalEntity: public OgreBulletCollisions::StaticMeshToShapeConverter
 {
 public:
-    btCollisionShape* fallShape;
-    btDefaultMotionState* fallMotionState ;
-    btRigidBody* myBody;
-
+OgreBulletDynamics::RigidBody * myChassis;
+    float mass;
+     std::string name;
+    OgreBulletCollisions::CompoundCollisionShape* compound;
+    Ogre::SceneNode* node;
+    OgreBulletDynamics::DynamicsWorld*world;
 
     void applyOgreShape(Ogre::Entity *entity);
+    void rebuild();
 
-    physicalEntity(Vec3 position);
-    Vec3 toYVec3(){
+    physicalEntity( std::string name,Vec3 pos,Ogre::SceneNode* node,  Ogre::Entity* entity, OgreBulletDynamics::DynamicsWorld*world);
 
-    btTransform trans;
-    myBody->getMotionState()->getWorldTransform(trans);
-    return Vec3(trans.getOrigin().getX(), trans.getOrigin().getY(), trans.getOrigin().getZ() );
-    }
-    Ogre::Quaternion toQuat(){
-        btQuaternion orientation = myBody->getOrientation();
-    return Ogre::Quaternion( orientation.getX(),orientation.getY(),orientation.getZ() ,orientation.getW() );
-    }
 
 
 };
@@ -45,55 +63,16 @@ public:
 class physicsUniverse
 {
 public:
-    btBroadphaseInterface*broadphase;
-    btDefaultCollisionConfiguration*collisionConfiguration;
-    btCollisionDispatcher* dispatcher;
-    btSequentialImpulseConstraintSolver*solver;
-    btDiscreteDynamicsWorld*dynamicsWorld;
+    OgreBulletDynamics::DynamicsWorld* dynamicsWorld;
     btRigidBody* groundRigidBody;
 
     btCollisionShape* groundShape;
 
-    physicsUniverse()
-    {
-        broadphase = new btDbvtBroadphase();
+    physicsUniverse(Ogre::SceneManager* mSceneMgr);
 
-        collisionConfiguration = new btDefaultCollisionConfiguration();
-        dispatcher = new btCollisionDispatcher(collisionConfiguration);
-
-        solver = new btSequentialImpulseConstraintSolver;
-
-        dynamicsWorld = new btDiscreteDynamicsWorld(dispatcher,broadphase,solver,collisionConfiguration);
-
-        dynamicsWorld->setGravity(btVector3(0,-50,0));
-
-
-        groundShape = new btStaticPlaneShape(btVector3(0,1,0),1);
-///////////////////////
-        btDefaultMotionState* groundMotionState = new btDefaultMotionState(btTransform(btQuaternion(0,0,0,1),btVector3(0,-1,0)));
-        btRigidBody::btRigidBodyConstructionInfo
-        groundRigidBodyCI(0,groundMotionState,groundShape,btVector3(0,0,0));
-        groundRigidBody = new btRigidBody(groundRigidBodyCI);
-        dynamicsWorld->addRigidBody(groundRigidBody);
-
-
-    }
     ~physicsUniverse()
     {
 
-        dynamicsWorld->removeRigidBody(groundRigidBody);
-        delete groundRigidBody->getMotionState();
-        delete groundRigidBody;
-
-
-        delete groundShape;
-
-
-        delete dynamicsWorld;
-        delete solver;
-        delete collisionConfiguration;
-        delete dispatcher;
-        delete broadphase;
     };
 };
 };

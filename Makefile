@@ -4,7 +4,7 @@
 # Compiler Settings
 CC=g++
 CFLAGS= `pkg-config --cflags OGRE OIS bullet` -Wall -I/usr/local/include -I/usr/local/include/OgreBullet/Dynamics -I/usr/local/include/OGRE -I/usr/local/include/bullet -I/usr/local/include/OgreBullet/ -I/usr/local/include/OgreBullet/Collisions/
-LDFLAGS= `pkg-config  --libs OGRE OIS bullet` -lOgreBulletDynamics -lOgreBulletCollisions  -L/usr/local/include/bullet/BulletCollision/CollisionShapes/   -lConvexDecomposition
+LDFLAGS= `pkg-config  --libs OGRE OIS bullet` -lOgreBulletDynamics -lOgreBulletCollisions  -L/usr/local/include/bullet/BulletCollision/CollisionShapes/   -lConvexDecomposition -lBulletCollision
 FOLDERS=$(shell  find . -type d -path './[!.]*')
 INCLUDE_FOLDERS=$(addprefix -I,$(patsubst %,%/,$(FOLDERS)))
 SOURCES=$(shell  find . -name '*.cpp' -not -name '*testing*')
